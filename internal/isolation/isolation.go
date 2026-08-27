@@ -27,9 +27,9 @@ func homeDir() string {
 // ProjectLock provides per-project flock-based mutual exclusion.
 // Only one orchestra conductor can run per project at a time.
 type ProjectLock struct {
-	slug     string
-	pidPath  string
-	file     *os.File
+	slug    string
+	pidPath string
+	file    *os.File
 }
 
 // AcquireLock acquires an exclusive flock for the given project slug.
@@ -119,9 +119,9 @@ func IsLocked(slug string) (bool, int, error) {
 // SharedRateLimiter coordinates rate limit usage across concurrent orchestra
 // instances using a shared SQLite database at ~/.config/orchestra/rate-limits.db.
 type SharedRateLimiter struct {
-	db           *sql.DB
-	globalLimit  int
-	windowSecs   int
+	db          *sql.DB
+	globalLimit int
+	windowSecs  int
 }
 
 const rateLimitSchema = `

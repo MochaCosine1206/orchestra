@@ -17,10 +17,10 @@ type Waiter struct {
 
 // ProjectState tracks per-project state for message routing.
 type ProjectState struct {
-	Slug     string
-	TopicID  int64
-	Branch   string
-	CWD      string // project directory path
+	Slug    string
+	TopicID int64
+	Branch  string
+	CWD     string // project directory path
 
 	mu       sync.Mutex
 	waiters  []Waiter

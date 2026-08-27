@@ -65,9 +65,9 @@ type TGUser struct {
 
 // TGUpdate represents a single update from getUpdates.
 type TGUpdate struct {
-	UpdateID      int64          `json:"update_id"`
-	Message       *TGMessage     `json:"message"`
-	CallbackQuery *TGCallback    `json:"callback_query"`
+	UpdateID      int64       `json:"update_id"`
+	Message       *TGMessage  `json:"message"`
+	CallbackQuery *TGCallback `json:"callback_query"`
 }
 
 // TGCallback represents a callback query (inline button press).
@@ -318,10 +318,10 @@ type TGBotInfo struct {
 
 // TGChatInfo is the result of getChat.
 type TGChatInfo struct {
-	ID        int64  `json:"id"`
-	Type      string `json:"type"`
-	Title     string `json:"title"`
-	IsForum   bool   `json:"is_forum"`
+	ID      int64  `json:"id"`
+	Type    string `json:"type"`
+	Title   string `json:"title"`
+	IsForum bool   `json:"is_forum"`
 }
 
 // GetMe validates the bot token by calling getMe.

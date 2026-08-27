@@ -36,8 +36,8 @@ type Options struct {
 
 // FileAction describes what happened to a file during scaffolding.
 type FileAction struct {
-	Path    string
-	Action  string // "created", "skipped", "overwritten"
+	Path   string
+	Action string // "created", "skipped", "overwritten"
 }
 
 // Result summarizes what the scaffold writer did.

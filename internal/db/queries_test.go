@@ -1181,8 +1181,8 @@ func TestListTaskIDsByPhase(t *testing.T) {
 
 	// Create tasks with different phase IDs
 	tasks := []struct {
-		id      string
-		phase   string
+		id    string
+		phase string
 	}{
 		{"t1", "phase-scaffold"},
 		{"t2", "phase-scaffold"},

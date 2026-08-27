@@ -319,4 +319,3 @@ func TestSetBlackboardOnce_ImmutableGoal(t *testing.T) {
 		t.Errorf("expected 'original goal', got %q", val)
 	}
 }
-

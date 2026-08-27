@@ -4,18 +4,18 @@ import "github.com/charmbracelet/bubbles/key"
 
 // keyMap defines the key bindings for the TUI.
 type keyMap struct {
-	Tab      key.Binding
-	ShiftTab key.Binding
-	Up       key.Binding
-	Down     key.Binding
-	Top      key.Binding
-	Bottom   key.Binding
-	Enter    key.Binding
-	Space    key.Binding
-	Retry    key.Binding
-	Kill     key.Binding
-	Detail   key.Binding
-	Filter   key.Binding
+	Tab        key.Binding
+	ShiftTab   key.Binding
+	Up         key.Binding
+	Down       key.Binding
+	Top        key.Binding
+	Bottom     key.Binding
+	Enter      key.Binding
+	Space      key.Binding
+	Retry      key.Binding
+	Kill       key.Binding
+	Detail     key.Binding
+	Filter     key.Binding
 	Input      key.Binding
 	Blackboard key.Binding
 	Escape     key.Binding

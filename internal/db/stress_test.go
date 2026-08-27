@@ -860,11 +860,11 @@ func TestStress_MultipleDBConnections(t *testing.T) {
 	}
 
 	var (
-		writeOps   atomic.Int64
-		readOps    atomic.Int64
-		writeErrs  atomic.Int64
-		readErrs   atomic.Int64
-		wg         sync.WaitGroup
+		writeOps  atomic.Int64
+		readOps   atomic.Int64
+		writeErrs atomic.Int64
+		readErrs  atomic.Int64
+		wg        sync.WaitGroup
 	)
 
 	deadline := time.Now().Add(duration)

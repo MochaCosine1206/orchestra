@@ -75,7 +75,7 @@ func TestStress_5AgentLifecycle(t *testing.T) {
 		startedAt      = make(map[string]time.Time) // taskID → when it started
 		completedAt    = make(map[string]time.Time) // taskID → when it completed
 		assignedCount  = make(map[string]int)       // taskID → how many times assigned
-		agentWorkCount atomic.Int64                  // total agent work operations
+		agentWorkCount atomic.Int64                 // total agent work operations
 	)
 
 	const numAgents = 5

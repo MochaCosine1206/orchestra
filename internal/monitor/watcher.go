@@ -19,11 +19,11 @@ const (
 
 // skipDirs are directories that should never be watched inside worktrees.
 var skipDirs = map[string]bool{
-	".git":              true,
-	".claude":           true,
-	".orchestra-hooks":  true,
-	"node_modules":      true,
-	".worktree":         true,
+	".git":             true,
+	".claude":          true,
+	".orchestra-hooks": true,
+	"node_modules":     true,
+	".worktree":        true,
 }
 
 // FileWatcher monitors agent worktrees for file ownership violations in real-time.
@@ -35,9 +35,9 @@ type FileWatcher struct {
 	watcher    *fsnotify.Watcher
 	cancel     context.CancelFunc
 	done       chan struct{}
-	worktrees  map[string]string            // taskID → worktree path
-	ownedFiles map[string]map[string]bool   // taskID → set of owned file paths
-	debounce   map[string]time.Time         // abs file path → last event time
+	worktrees  map[string]string          // taskID → worktree path
+	ownedFiles map[string]map[string]bool // taskID → set of owned file paths
+	debounce   map[string]time.Time       // abs file path → last event time
 }
 
 // NewFileWatcher creates a new FileWatcher. Call Start to begin watching.

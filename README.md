@@ -41,6 +41,42 @@ orchestra go --goal "Add user authentication with OAuth2 and role-based access"
 orchestra dashboard
 ```
 
+## Onboarding
+
+`orchestra init` runs an interactive wizard rather than writing a fixed layout. It scans your
+environment first, then only offers features whose dependencies are present — `docker-sandbox`
+is hidden without Docker, the Claude Code and MCP steps need `claude` on your `PATH`.
+
+It asks for:
+
+| Prompt | Effect |
+|--------|--------|
+| Project name | Used in scaffolded files |
+| Project type | Tunes the scaffolded agent instructions |
+| Default directory for new projects | Where `orchestra new` creates projects; saved to `~/.config/orchestra/config.json`. Blank to skip |
+| Enable Claude Code integration? | Scaffolds `.orchestra/agents/`, `.orchestra/profiles/`, `.claude/commands/` |
+| Install MCP servers? | Registers the six servers via `claude mcp add` |
+| Create loop scaffolding? | Creates `.orchestra/` directories for research, specs, ideas, creativity output |
+
+Telegram notifications are offered here too and are entirely optional — Orchestra runs fine
+without them, and nothing else degrades if you decline.
+
+A default run writes 11 agent definitions, 11 permission profiles, six MCP server entries and
+four loop directories.
+
+To skip the wizard:
+
+```bash
+orchestra init --non-interactive   # enable everything whose dependencies are satisfied
+orchestra init --all               # scaffolding only: --claude-code --mcp --loops
+orchestra init --claude-code       # pick individual pieces
+orchestra init --force             # overwrite an existing setup
+```
+
+`--non-interactive` deliberately skips features that need a setup wizard, since those read from
+stdin. Telegram is one of them: configure it by running `orchestra init` interactively, or by
+exporting `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`.
+
 ## Commands
 
 ### Running work
@@ -189,9 +225,6 @@ orchestra reset
 ```
 
 ### Known issues from dogfooding
-- **`orchestra init --non-interactive` fails.** It still enters the Telegram setup wizard and
-  aborts on EOF, leaving the project uninitialized. Use plain `orchestra init`, which skips the
-  wizard when no terminal is attached.
 - **Rate limits on Claude Max** — Rare but possible. The RetryRunner handles exponential backoff automatically.
 - **Nested Claude detection** — Claude Code v2.1.41+ detects nested sessions. Orchestra strips the `CLAUDECODE` env var to prevent this.
 - **Long autonomous sessions** — After ~1hr, consider shorter `--max-cycles` to prevent context degradation.
@@ -205,6 +238,8 @@ orchestra reset
 │   └── telegram-bridge/     — Approval/notification bridge
 ├── internal/
 │   ├── agent/               — Spawning, roles, checkpoints, failure classification, Docker args
+│   ├── core/                — Shared layer: daemon DB, fairness, scheduling policy, multi-project
+│   │                          status, service install, PR creation, log-stream and markdown render
 │   ├── assets/              — Embedded agent definitions and templates
 │   ├── bridge/              — Telegram approval + AskUserQuestion routing
 │   ├── cage/                — Hard-limit enforcement (the "cage pattern")

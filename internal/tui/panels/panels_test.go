@@ -688,7 +688,7 @@ func TestLogPanelToggleExpand(t *testing.T) {
 	p.AppendEntries(entries)
 
 	// Move cursor to the tool use entry
-	p.CursorUp() // now at entry 0 (text)
+	p.CursorUp()   // now at entry 0 (text)
 	p.CursorDown() // now at entry 1 (tool use)
 	// Actually with autoScroll, cursor starts at last entry (1)
 	// So we don't need to move

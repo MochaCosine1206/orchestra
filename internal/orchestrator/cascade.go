@@ -20,11 +20,11 @@ const (
 
 // ComplexityEstimate captures the LLM's assessment of task complexity.
 type ComplexityEstimate struct {
-	EstimatedFiles    int            `json:"estimated_files"`
-	Reasoning         string         `json:"reasoning"`
-	IsResearch        bool           `json:"is_research"`
-	SemanticCohesion  string         `json:"semantic_cohesion"` // "high", "medium", "low"
-	Tier              ComplexityTier `json:"tier"`
+	EstimatedFiles   int            `json:"estimated_files"`
+	Reasoning        string         `json:"reasoning"`
+	IsResearch       bool           `json:"is_research"`
+	SemanticCohesion string         `json:"semantic_cohesion"` // "high", "medium", "low"
+	Tier             ComplexityTier `json:"tier"`
 }
 
 const complexityPromptTemplate = `Estimate the complexity of this coding task. How many files will need to be created or modified?

@@ -126,8 +126,8 @@ type WorkItem struct {
 	LicenseReason string
 
 	// State
-	Status           string
-	RetryCount       int
+	Status            string
+	RetryCount        int
 	LastFailureReason string
 
 	// Timestamps

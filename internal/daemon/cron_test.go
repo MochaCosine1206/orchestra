@@ -101,13 +101,13 @@ func TestParseCron_Presets(t *testing.T) {
 		minute int
 		hour   int
 	}{
-		{"@hourly", 0, -1},   // minute=0, hour=*
-		{"@daily", 0, 0},     // 0 0 * * *
-		{"@midnight", 0, 0},  // same as daily
-		{"@weekly", 0, 0},    // 0 0 * * 0
-		{"@monthly", 0, 0},   // 0 0 1 * *
-		{"@yearly", 0, 0},    // 0 0 1 1 *
-		{"@annually", 0, 0},  // same as yearly
+		{"@hourly", 0, -1},  // minute=0, hour=*
+		{"@daily", 0, 0},    // 0 0 * * *
+		{"@midnight", 0, 0}, // same as daily
+		{"@weekly", 0, 0},   // 0 0 * * 0
+		{"@monthly", 0, 0},  // 0 0 1 * *
+		{"@yearly", 0, 0},   // 0 0 1 1 *
+		{"@annually", 0, 0}, // same as yearly
 	}
 	for _, tt := range tests {
 		c, err := ParseCron(tt.preset)
@@ -156,9 +156,9 @@ func TestIsDue_NoMatch(t *testing.T) {
 }
 
 func TestIsDue_DayOfWeek(t *testing.T) {
-	c, _ := ParseCron("0 9 * * 1") // Monday only
-	monday := time.Date(2026, 3, 23, 9, 0, 0, 0, time.UTC)    // Monday
-	tuesday := time.Date(2026, 3, 24, 9, 0, 0, 0, time.UTC)   // Tuesday
+	c, _ := ParseCron("0 9 * * 1")                          // Monday only
+	monday := time.Date(2026, 3, 23, 9, 0, 0, 0, time.UTC)  // Monday
+	tuesday := time.Date(2026, 3, 24, 9, 0, 0, 0, time.UTC) // Tuesday
 	if !c.IsDue(monday) {
 		t.Error("expected IsDue=true on Monday")
 	}

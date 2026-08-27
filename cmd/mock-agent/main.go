@@ -116,10 +116,10 @@ func emitEvent(role string, content map[string]any) {
 
 func emitResult(exitCode int) {
 	result := map[string]any{
-		"type":       "result",
-		"session_id": fmt.Sprintf("mock-%d", time.Now().UnixNano()),
-		"cost_usd":   0.0,
-		"is_error":   exitCode != 0,
+		"type":        "result",
+		"session_id":  fmt.Sprintf("mock-%d", time.Now().UnixNano()),
+		"cost_usd":    0.0,
+		"is_error":    exitCode != 0,
 		"duration_ms": 10000,
 		"num_turns":   5,
 	}

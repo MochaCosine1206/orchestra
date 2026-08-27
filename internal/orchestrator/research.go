@@ -30,13 +30,13 @@ type SearchRound struct {
 
 // TopicResult holds results for a single sub-question in a search round.
 type TopicResult struct {
-	QuestionID      string  `json:"question_id"`
-	QueriesExecuted []string `json:"queries_executed"`
-	Claims          []Claim `json:"claims"`
-	SourcesThisRound int    `json:"sources_this_round"`
-	NewClaimsCount   int    `json:"new_claims_this_round"`
-	TotalClaims      int    `json:"total_claims"`
-	Status           string `json:"status"` // "exploring", "saturated", "gap"
+	QuestionID       string   `json:"question_id"`
+	QueriesExecuted  []string `json:"queries_executed"`
+	Claims           []Claim  `json:"claims"`
+	SourcesThisRound int      `json:"sources_this_round"`
+	NewClaimsCount   int      `json:"new_claims_this_round"`
+	TotalClaims      int      `json:"total_claims"`
+	Status           string   `json:"status"` // "exploring", "saturated", "gap"
 }
 
 // Claim represents a single factual assertion with its source.

@@ -1,4 +1,4 @@
-package orchestra
+package core
 
 import (
 	"encoding/json"
@@ -13,9 +13,9 @@ type CommandRunner interface {
 
 // PRRequest contains parameters for creating a pull request.
 type PRRequest struct {
-	Repo       string   // owner/repo format
-	Branch     string   // head branch
-	BaseBranch string   // base branch
+	Repo       string // owner/repo format
+	Branch     string // head branch
+	BaseBranch string // base branch
 	Title      string
 	Body       string
 	Labels     []string

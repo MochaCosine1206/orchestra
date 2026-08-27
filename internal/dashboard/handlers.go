@@ -493,14 +493,14 @@ type ClusterGroup struct {
 
 // GitViewData is the template data for the git visualization page.
 type GitViewData struct {
-	ConductorID   string
-	BaseBranch    string
-	StagingBranch string
-	MergeStatus   string // NULL/"merging"/"staging"/"done"
-	Clusters      []ClusterGroup
+	ConductorID    string
+	BaseBranch     string
+	StagingBranch  string
+	MergeStatus    string // NULL/"merging"/"staging"/"done"
+	Clusters       []ClusterGroup
 	UngroupedLanes []BranchLane
-	MergeQueue    []MergeQueueDisplay
-	FileLocks     []FileLockDisplay
+	MergeQueue     []MergeQueueDisplay
+	FileLocks      []FileLockDisplay
 }
 
 // MergeQueueDisplay is a template-friendly merge queue entry.

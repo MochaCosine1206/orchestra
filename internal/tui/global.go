@@ -10,8 +10,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	orchestra "github.com/MochaCosine1206/orchestra"
 	"github.com/MochaCosine1206/orchestra/internal/config"
+	"github.com/MochaCosine1206/orchestra/internal/core"
 	"github.com/MochaCosine1206/orchestra/internal/version"
 )
 
@@ -20,14 +20,14 @@ type globalTickMsg struct{}
 
 // globalDataMsg carries refreshed project summaries.
 type globalDataMsg struct {
-	status *orchestra.GlobalStatus
+	status *core.GlobalStatus
 	err    error
 }
 
 // GlobalModel is the root Bubble Tea model for the multi-project global dashboard.
 type GlobalModel struct {
 	projects []*config.ProjectEntry
-	status   *orchestra.GlobalStatus
+	status   *core.GlobalStatus
 
 	selected int
 	width    int
@@ -86,7 +86,7 @@ func (m GlobalModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// Number keys 1-9 for quick selection
 		if len(msg.String()) == 1 && msg.String()[0] >= '1' && msg.String()[0] <= '9' {
-			idx := int(msg.String()[0]-'1')
+			idx := int(msg.String()[0] - '1')
 			if idx < m.projectCount() {
 				m.selected = idx
 			}
@@ -331,7 +331,7 @@ func (m GlobalModel) fetchGlobalData() tea.Cmd {
 			paths = append(paths, p.Path)
 		}
 		ctx := context.Background()
-		status, err := orchestra.GlobalStatusSummary(ctx, paths)
+		status, err := core.GlobalStatusSummary(ctx, paths)
 		if err != nil {
 			return globalDataMsg{err: err}
 		}

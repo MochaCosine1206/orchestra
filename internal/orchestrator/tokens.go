@@ -23,9 +23,9 @@ type TokenUsage struct {
 
 // TokenSummary aggregates token usage across all agents.
 type TokenSummary struct {
-	ByRole  map[string]TokenUsage `json:"by_role"`
-	Total   TokenUsage            `json:"total"`
-	Agents  []TokenUsage          `json:"agents"`
+	ByRole map[string]TokenUsage `json:"by_role"`
+	Total  TokenUsage            `json:"total"`
+	Agents []TokenUsage          `json:"agents"`
 }
 
 // Tokens aggregates token usage from agent JSONL logs.

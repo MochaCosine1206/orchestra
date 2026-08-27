@@ -21,19 +21,19 @@ type AutoOpts struct {
 
 // AutoResult captures the outcome of autonomous mode.
 type AutoResult struct {
-	CyclesRun    int
-	GoalsFound   int
-	TasksDone    int
-	TasksFailed  int
-	StopReason   string
-	Duration     time.Duration
+	CyclesRun   int
+	GoalsFound  int
+	TasksDone   int
+	TasksFailed int
+	StopReason  string
+	Duration    time.Duration
 }
 
 const (
-	defaultAutoMaxCycles    = 10
-	maxEmptyCycles          = 2
-	maxConsecutiveAllFail   = 3
-	autoTimeout             = 6 * time.Hour
+	defaultAutoMaxCycles  = 10
+	maxEmptyCycles        = 2
+	maxConsecutiveAllFail = 3
+	autoTimeout           = 6 * time.Hour
 )
 
 // Auto runs autonomous discovery-and-execution cycles.

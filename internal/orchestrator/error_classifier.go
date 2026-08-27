@@ -22,25 +22,25 @@ const (
 // ErrorEnvelope captures a single classified error from build or test output.
 type ErrorEnvelope struct {
 	TaskID        string        `json:"task_id"`
-	ErrorType     string        `json:"error_type"`      // "build_error", "test_failure", "missing_dep", "type_error", "runtime_error", "missing_import", "syntax_error"
-	RawOutput     string        `json:"raw_output"`       // full build/test output
-	FilesAffected []string      `json:"files_affected"`   // which files have errors
-	LineNumbers   []int         `json:"line_numbers"`     // error line numbers if parseable
+	ErrorType     string        `json:"error_type"`     // "build_error", "test_failure", "missing_dep", "type_error", "runtime_error", "missing_import", "syntax_error"
+	RawOutput     string        `json:"raw_output"`     // full build/test output
+	FilesAffected []string      `json:"files_affected"` // which files have errors
+	LineNumbers   []int         `json:"line_numbers"`   // error line numbers if parseable
 	Triage        TriageOutcome `json:"triage"`
-	FixHint       string        `json:"fix_hint"`         // actionable hint for the agent
+	FixHint       string        `json:"fix_hint"` // actionable hint for the agent
 }
 
 // --- Regex patterns for various build systems ---
 
 // Go patterns
 var (
-	goCompileErrorRe  = regexp.MustCompile(`^(.+\.go):(\d+):\d+: (.+)$`)
-	goImportErrorRe   = regexp.MustCompile(`could not import|imported and not used|cannot find package|no required module provides`)
-	goTypeErrorRe     = regexp.MustCompile(`cannot use .+ as .+ in|incompatible type|undefined:|cannot convert|has no field or method`)
-	goSyntaxErrorRe   = regexp.MustCompile(`expected .+, found|syntax error|unexpected`)
-	goTestFailRe      = regexp.MustCompile(`^--- FAIL: (\S+)\s`)
-	goTestPkgFailRe   = regexp.MustCompile(`^FAIL\s+(\S+)`)
-	goTestOutputRe    = regexp.MustCompile(`^\s+(.+\.go):(\d+): (.+)$`)
+	goCompileErrorRe = regexp.MustCompile(`^(.+\.go):(\d+):\d+: (.+)$`)
+	goImportErrorRe  = regexp.MustCompile(`could not import|imported and not used|cannot find package|no required module provides`)
+	goTypeErrorRe    = regexp.MustCompile(`cannot use .+ as .+ in|incompatible type|undefined:|cannot convert|has no field or method`)
+	goSyntaxErrorRe  = regexp.MustCompile(`expected .+, found|syntax error|unexpected`)
+	goTestFailRe     = regexp.MustCompile(`^--- FAIL: (\S+)\s`)
+	goTestPkgFailRe  = regexp.MustCompile(`^FAIL\s+(\S+)`)
+	goTestOutputRe   = regexp.MustCompile(`^\s+(.+\.go):(\d+): (.+)$`)
 )
 
 // npm / Node.js patterns

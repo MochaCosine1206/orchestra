@@ -15,7 +15,7 @@ type testCollector struct {
 	err    error
 }
 
-func (c *testCollector) Name() Source                                   { return c.source }
+func (c *testCollector) Name() Source                                  { return c.source }
 func (c *testCollector) Collect(_ context.Context) ([]WorkItem, error) { return c.items, c.err }
 
 func setupTestDB(t *testing.T) *db.DB {

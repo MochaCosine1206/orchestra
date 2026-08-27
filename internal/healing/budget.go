@@ -58,10 +58,10 @@ func (b *Budget) RecordFix(ctx context.Context, taskID string, errorType ErrorTy
 
 	id := fmt.Sprintf("hl-%s-%d", b.sessionID, b.count+1)
 	h := db.HealingLog{
-		ID:        id,
-		SessionID: b.sessionID,
-		TaskID:    sql.NullString{String: taskID, Valid: taskID != ""},
-		ErrorType: sql.NullString{String: string(errorType), Valid: true},
+		ID:         id,
+		SessionID:  b.sessionID,
+		TaskID:     sql.NullString{String: taskID, Valid: taskID != ""},
+		ErrorType:  sql.NullString{String: string(errorType), Valid: true},
 		FixApplied: sql.NullString{String: fixApplied, Valid: fixApplied != ""},
 		Success:    0,
 		RolledBack: 0,

@@ -188,4 +188,3 @@ func autoControl(cmd *cobra.Command, pause, resume, stop bool) error {
 
 	return nil
 }
-

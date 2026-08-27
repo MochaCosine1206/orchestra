@@ -16,7 +16,7 @@ func TestComputeStallScore_AllZero(t *testing.T) {
 func TestComputeStallScore_CompactionSuppression(t *testing.T) {
 	compactedAt := time.Now().Add(-1 * time.Minute) // 1min ago, within 2min window
 	activity := AgentActivity{
-		CompactedAt: &compactedAt,
+		CompactedAt:     &compactedAt,
 		RecentToolCalls: makeRepeatedCalls("Read", "foo.go", 10),
 		Errors:          makeRepeatedErrors(0xDEAD, 5),
 		ReadWrite:       ReadWriteStats{Reads: 10, Writes: 0, HasEdited: true},

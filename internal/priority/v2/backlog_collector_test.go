@@ -142,12 +142,12 @@ func TestBacklogCollector_PriorityMapping(t *testing.T) {
 		basePriority int
 		tier         Tier
 	}{
-		{"B-002", 100, TierGoalImpl},       // P0
-		{"B-010", 80, TierGoalResearch},    // P1
-		{"B-020", 60, TierGoalResearch},    // P2
-		{"B-030", 40, TierTechDebt},        // P3
-		{"B-040", 20, TierTechDebt},        // P4
-		{"I-001", 10, TierExploratory},     // P5
+		{"B-002", 100, TierGoalImpl},    // P0
+		{"B-010", 80, TierGoalResearch}, // P1
+		{"B-020", 60, TierGoalResearch}, // P2
+		{"B-030", 40, TierTechDebt},     // P3
+		{"B-040", 20, TierTechDebt},     // P4
+		{"I-001", 10, TierExploratory},  // P5
 	}
 
 	for _, e := range expected {

@@ -53,12 +53,12 @@ type ArmResult struct {
 	MCPEnabled   bool          `json:"mcp_enabled"`
 
 	// Rubric metrics (captured automatically)
-	LinesChanged     int     `json:"lines_changed"`      // insertions + deletions
+	LinesChanged     int     `json:"lines_changed"` // insertions + deletions
 	FilesChanged     int     `json:"files_changed"`
-	RetryCount       int     `json:"retry_count"`        // refinement rounds needed
-	Score            float64 `json:"score"`              // weighted rubric score (0-10)
-	ReviewFindings   int     `json:"review_findings"`    // structured review: total findings
-	ReviewActionable int     `json:"review_actionable"`  // structured review: actionable (high/critical)
+	RetryCount       int     `json:"retry_count"`       // refinement rounds needed
+	Score            float64 `json:"score"`             // weighted rubric score (0-10)
+	ReviewFindings   int     `json:"review_findings"`   // structured review: total findings
+	ReviewActionable int     `json:"review_actionable"` // structured review: actionable (high/critical)
 }
 
 // ABComparison derives comparison metrics between arms.
@@ -414,10 +414,11 @@ func parseDiffStat(stat string) (files, lines int) {
 // scoreArm computes a weighted rubric score (0-10) for an arm result.
 //
 // Dimensions and weights:
-//   Correctness (3x): tests pass = 3, fail = 0
-//   Speed (2x):       scored relative (caller handles comparison)
-//   Precision (2x):   fewer lines/files = better (scaled 0-2)
-//   Retries (1x):     0 retries = 1, any retries = 0
+//
+//	Correctness (3x): tests pass = 3, fail = 0
+//	Speed (2x):       scored relative (caller handles comparison)
+//	Precision (2x):   fewer lines/files = better (scaled 0-2)
+//	Retries (1x):     0 retries = 1, any retries = 0
 //
 // Speed is scored comparatively in compareArms, not here.
 // This returns the non-comparative components (max 6 out of 10).

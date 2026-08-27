@@ -341,7 +341,7 @@ func TestReleaseAllGatesPass(t *testing.T) {
 	mock := newMockGitRunner(map[string]mockGitResult{
 		"status --porcelain":    {output: ""},
 		"branch --show-current": {output: "main"},
-		"rev-parse v1.0.0":     {output: "", err: fmt.Errorf("not a tag")},
+		"rev-parse v1.0.0":      {output: "", err: fmt.Errorf("not a tag")},
 	})
 	setMockGit(t, mock)
 

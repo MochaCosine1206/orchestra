@@ -52,7 +52,8 @@ type AgentSpawnerFunc func(ctx context.Context, repoRoot string, prompt string) 
 // --- Regex patterns for error-to-file mapping ---
 
 // Rust compiler: error[E0308]: mismatched types
-//   --> src/main.rs:42:5
+//
+//	--> src/main.rs:42:5
 var rustFileLineRe = regexp.MustCompile(`-->\s+([^\s:]+\.rs):(\d+):\d+`)
 
 // Rust compiler error message line (for context)

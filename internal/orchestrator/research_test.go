@@ -29,8 +29,8 @@ func makeSearchRoundResponse(roundNum int, questionIDs []string, newClaims, dupC
 	round := SearchRound{RoundNumber: roundNum}
 	for _, qid := range questionIDs {
 		topic := TopicResult{
-			QuestionID:      qid,
-			QueriesExecuted: []string{"query1", "query2"},
+			QuestionID:       qid,
+			QueriesExecuted:  []string{"query1", "query2"},
 			SourcesThisRound: newClaims + dupClaims,
 			NewClaimsCount:   newClaims,
 			TotalClaims:      totalPerTopic,
@@ -146,9 +146,9 @@ func TestResearchLoopMinRounds(t *testing.T) {
 	mock := &MockRunner{
 		Outputs: []string{
 			makePlanResponse(3),
-			makeSearchRoundResponse(1, qIDs, 0, 5, 5),  // 0% new — would saturate
-			makeSearchRoundResponse(2, qIDs, 0, 5, 5),  // 0% new — would saturate
-			makeSearchRoundResponse(3, qIDs, 0, 5, 5),  // 0% new — saturates at round 3 (MinRounds met)
+			makeSearchRoundResponse(1, qIDs, 0, 5, 5), // 0% new — would saturate
+			makeSearchRoundResponse(2, qIDs, 0, 5, 5), // 0% new — would saturate
+			makeSearchRoundResponse(3, qIDs, 0, 5, 5), // 0% new — saturates at round 3 (MinRounds met)
 			makeSynthesisResponse(3, 0),
 		},
 	}
@@ -179,11 +179,11 @@ func TestResearchLoopSaturation(t *testing.T) {
 	mock := &MockRunner{
 		Outputs: []string{
 			makePlanResponse(3),
-			makeSearchRoundResponse(1, qIDs, 5, 1, 3),  // 83% new
-			makeSearchRoundResponse(2, qIDs, 5, 1, 6),  // 83% new
-			makeSearchRoundResponse(3, qIDs, 5, 1, 9),  // 83% new
-			makeSearchRoundResponse(4, qIDs, 0, 5, 9),  // 0% new — low yield 1
-			makeSearchRoundResponse(5, qIDs, 0, 5, 9),  // 0% new — low yield 2 → saturated
+			makeSearchRoundResponse(1, qIDs, 5, 1, 3), // 83% new
+			makeSearchRoundResponse(2, qIDs, 5, 1, 6), // 83% new
+			makeSearchRoundResponse(3, qIDs, 5, 1, 9), // 83% new
+			makeSearchRoundResponse(4, qIDs, 0, 5, 9), // 0% new — low yield 1
+			makeSearchRoundResponse(5, qIDs, 0, 5, 9), // 0% new — low yield 2 → saturated
 			makeSynthesisResponse(5, 45),
 		},
 	}

@@ -223,10 +223,10 @@ func TestFIFOQueue_AutoEnable(t *testing.T) {
 		strategy  string
 		expected  string
 	}{
-		{1, "", ""},     // 1 task: no auto-enable
-		{2, "", ""},     // 2 tasks: no auto-enable
-		{3, "", "fifo"}, // 3 tasks: auto-enable FIFO
-		{5, "", "fifo"}, // 5 tasks: auto-enable FIFO
+		{1, "", ""},           // 1 task: no auto-enable
+		{2, "", ""},           // 2 tasks: no auto-enable
+		{3, "", "fifo"},       // 3 tasks: auto-enable FIFO
+		{5, "", "fifo"},       // 5 tasks: auto-enable FIFO
 		{3, "batch", "batch"}, // explicit batch: respect user choice
 		{3, "fifo", "fifo"},   // explicit FIFO: respect user choice
 	}

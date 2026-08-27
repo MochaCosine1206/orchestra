@@ -134,9 +134,9 @@ func TestExecCmd_FlagDefaults(t *testing.T) {
 	cmd := NewExecCmd()
 
 	tests := []struct {
-		name     string
-		flag     string
-		wantDef  string
+		name    string
+		flag    string
+		wantDef string
 	}{
 		{"max-parallel", "max-parallel", "8"},
 		{"interval", "interval", "10"},

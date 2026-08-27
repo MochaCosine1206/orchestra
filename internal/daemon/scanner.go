@@ -20,7 +20,7 @@ import (
 // SignalSource defines a feed to scan for discoveries.
 type SignalSource struct {
 	Name      string `json:"name"`
-	Type      string `json:"type"`      // "rss", "api", "web"
+	Type      string `json:"type"` // "rss", "api", "web"
 	URL       string `json:"url"`
 	Frequency string `json:"frequency"` // "daily", "weekly", "monthly"
 	Category  string `json:"category"`  // "ai-devtools", "academic", "startup", etc.
@@ -31,10 +31,10 @@ type Discovery struct {
 	Title        string    `json:"title"`
 	Description  string    `json:"description"`
 	URL          string    `json:"url"`
-	Source       string    `json:"source"`        // signal source name
+	Source       string    `json:"source"` // signal source name
 	Category     string    `json:"category"`
 	DiscoveredAt time.Time `json:"discovered_at"`
-	ContentHash  string    `json:"content_hash"`  // SHA256(source + title) for dedup
+	ContentHash  string    `json:"content_hash"` // SHA256(source + title) for dedup
 }
 
 // DiscoveryScanner reads signal source feeds and creates work_items for new discoveries.
@@ -148,10 +148,10 @@ type atomFeed struct {
 }
 
 type atomEntry struct {
-	Title   string    `xml:"title"`
-	Link    atomLink  `xml:"link"`
-	Summary string    `xml:"summary"`
-	Updated string    `xml:"updated"`
+	Title   string   `xml:"title"`
+	Link    atomLink `xml:"link"`
+	Summary string   `xml:"summary"`
+	Updated string   `xml:"updated"`
 }
 
 type atomLink struct {

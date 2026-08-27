@@ -1,4 +1,4 @@
-package orchestra
+package core
 
 import (
 	"encoding/json"

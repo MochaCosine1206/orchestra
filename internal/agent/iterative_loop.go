@@ -43,8 +43,8 @@ func DefaultLoopConfig(role Role) IterativeLoopConfig {
 		return IterativeLoopConfig{
 			MaxRounds:         3,
 			ConvergenceMetric: "gaps_remaining",
-			Threshold:         0,    // stop when 0 gaps remain from the plan
-			MinRounds:         1,    // can stop after round 1 if plan fully executed
+			Threshold:         0, // stop when 0 gaps remain from the plan
+			MinRounds:         1, // can stop after round 1 if plan fully executed
 		}
 	case RoleVisualReviewer:
 		return IterativeLoopConfig{

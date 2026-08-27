@@ -68,12 +68,12 @@ type ReadWriteStats struct {
 
 // AgentActivity aggregates all signals needed for stall scoring.
 type AgentActivity struct {
-	RecentToolCalls []ToolCall    // last 10 tool calls
-	FileActivity    FileActivity  // file modification data
-	Errors          []ErrorEntry  // recent error entries
+	RecentToolCalls []ToolCall   // last 10 tool calls
+	FileActivity    FileActivity // file modification data
+	Errors          []ErrorEntry // recent error entries
 	ReadWrite       ReadWriteStats
-	HasEdits        bool   // agent has made file edits
-	RunningTests    bool   // agent is executing test commands
+	HasEdits        bool       // agent has made file edits
+	RunningTests    bool       // agent is executing test commands
 	CompactedAt     *time.Time // last compaction event time
 }
 

@@ -39,10 +39,10 @@ func TestReDecompose(t *testing.T) {
 
 	// Create the original task
 	d.CreateTask(ctx, db.Task{
-		ID:    "t-orig",
-		Title: "Implement the feature",
+		ID:     "t-orig",
+		Title:  "Implement the feature",
 		Status: "failed",
-		Role:  "implementer",
+		Role:   "implementer",
 	})
 
 	// Store session IDs

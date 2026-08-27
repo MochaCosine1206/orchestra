@@ -17,12 +17,12 @@ import (
 
 // GenerateSpecOpts configures a spec generation invocation.
 type GenerateSpecOpts struct {
-	Idea                string            // required
-	TechStack           map[string]string // optional: language, framework, database, testing
-	Constraints         []string          // optional
-	OutputPath          string            // default: "spec.yaml" relative to RepoRoot
-	RepoContext         bool              // include repo map in prompt
-	FailClosed          bool              // B-289: return error if critical gaps remain after all iterations
+	Idea                string              // required
+	TechStack           map[string]string   // optional: language, framework, database, testing
+	Constraints         []string            // optional
+	OutputPath          string              // default: "spec.yaml" relative to RepoRoot
+	RepoContext         bool                // include repo map in prompt
+	FailClosed          bool                // B-289: return error if critical gaps remain after all iterations
 	PriorGaps           []PlanValidationGap // gaps from prior validation (correction loop)
 	PriorCoveredSummary string              // what was covered (prevent regression)
 }

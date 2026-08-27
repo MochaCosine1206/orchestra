@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
-	orchestra "github.com/MochaCosine1206/orchestra"
+	"github.com/MochaCosine1206/orchestra/internal/core"
 	"github.com/MochaCosine1206/orchestra/internal/db"
 	"github.com/spf13/cobra"
 )
@@ -35,11 +35,11 @@ func NewQueueCmd() *cobra.Command {
 
 // openDaemonDBForQueue opens the daemon database, initializes schema, and returns it.
 func openDaemonDBForQueue(ctx context.Context) (*db.DB, error) {
-	d, err := orchestra.OpenDaemonDB()
+	d, err := core.OpenDaemonDB()
 	if err != nil {
 		return nil, fmt.Errorf("opening daemon database: %w", err)
 	}
-	if err := orchestra.InitDaemonSchema(ctx, d); err != nil {
+	if err := core.InitDaemonSchema(ctx, d); err != nil {
 		d.Close()
 		return nil, fmt.Errorf("initializing daemon schema: %w", err)
 	}

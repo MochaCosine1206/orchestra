@@ -479,9 +479,9 @@ type newProjectOpts struct {
 	ProjectName  string
 	Runner       orchestrator.ClaudeRunner
 	SpecOpts     orchestrator.GenerateSpecOpts
-	GitInitFn    func(dir string) error         // nil to skip
-	GitCommitFn  func(dir, msg string) error     // nil to skip
-	IncludePaths []string                        // files/dirs to copy before scaffold
+	GitInitFn    func(dir string) error                         // nil to skip
+	GitCommitFn  func(dir, msg string) error                    // nil to skip
+	IncludePaths []string                                       // files/dirs to copy before scaffold
 	CopyFn       func(projectRoot string, paths []string) error // nil to skip
 }
 

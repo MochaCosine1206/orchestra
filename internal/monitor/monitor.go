@@ -94,10 +94,10 @@ type Monitor struct {
 	QualityCheckFunc  QualityCheckFunc  // optional: when set, runs quality gates before merge (Phase 5)
 	TaskGateFunc      TaskGateFunc      // optional: when set, runs build+test gate before marking task done
 	RepoRoot          string
-	LogsDir         string
-	PidsDir         string
-	Interval        time.Duration
-	Log             func(string) // logging callback
+	LogsDir           string
+	PidsDir           string
+	Interval          time.Duration
+	Log               func(string) // logging callback
 
 	stopCh     chan struct{}
 	mu         sync.Mutex
@@ -107,10 +107,10 @@ type Monitor struct {
 }
 
 const (
-	defaultInterval       = 15 * time.Second
-	stuckThreshold        = 600 * time.Second   // 10 minutes — warning (raised from 5min for long content tasks)
-	stuckKillThreshold    = 1800 * time.Second  // 30 minutes — kill escalation (raised from 10min for long content tasks)
-	killGracePeriod       = 10 * time.Second
+	defaultInterval    = 15 * time.Second
+	stuckThreshold     = 600 * time.Second  // 10 minutes — warning (raised from 5min for long content tasks)
+	stuckKillThreshold = 1800 * time.Second // 30 minutes — kill escalation (raised from 10min for long content tasks)
+	killGracePeriod    = 10 * time.Second
 )
 
 func (m *Monitor) log(format string, args ...interface{}) {

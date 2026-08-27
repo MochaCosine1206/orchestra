@@ -13,8 +13,8 @@ import (
 	"syscall"
 	"time"
 
-	orchestra "github.com/MochaCosine1206/orchestra"
 	"github.com/MochaCosine1206/orchestra/internal/config"
+	"github.com/MochaCosine1206/orchestra/internal/core"
 	"github.com/MochaCosine1206/orchestra/internal/db"
 	"github.com/MochaCosine1206/orchestra/internal/version"
 	"github.com/spf13/cobra"
@@ -77,7 +77,7 @@ func runGlobalStatus(cmd *cobra.Command, jsonMode bool) error {
 	}
 
 	ctx := context.Background()
-	status, err := orchestra.GlobalStatusSummary(ctx, paths)
+	status, err := core.GlobalStatusSummary(ctx, paths)
 	if err != nil {
 		return fmt.Errorf("querying global status: %w", err)
 	}

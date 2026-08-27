@@ -55,7 +55,7 @@ orchestra (Go binary)
 
 ## Project Structure
 
-26 internal packages. `internal/orchestrator` (76 files) and `internal/cmd` (44 files) are the
+27 internal packages. `internal/orchestrator` (76 files) and `internal/cmd` (44 files) are the
 two largest; `internal/agent`, `internal/priority`, `internal/tui` and `internal/dashboard`
 follow.
 
@@ -72,6 +72,9 @@ internal/
 ├── cage/           (2)  Hard-limit enforcement (the "cage pattern")
 ├── cmd/           (44)  Cobra command definitions
 ├── config/         (8)  Global configuration read/write
+├── core/          (16)  Shared layer for CLI/TUI/dashboard/daemon: daemon DB and schema,
+│                        fairness engine, scheduling policy, multi-project status, service
+│                        install and locking, PR creation, log-stream and markdown renderers
 ├── daemon/        (17)  Background daemon, cron, discovery scanning, decision queue
 ├── dashboard/     (21)  Web dashboard, SSE, HITL handlers, artifacts
 ├── db/            (14)  SQLite schema, queries, mutations, metrics

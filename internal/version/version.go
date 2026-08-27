@@ -28,13 +28,13 @@ const LatestVersion = "dev"
 //
 // Build metadata fields, set via -ldflags at build time. For example:
 //
-//	go build -ldflags "-X github.com/MochaCosine1206/orchestra/internal/version.Version=v1.2.3 \
-//	  -X github.com/MochaCosine1206/orchestra/internal/version.Commit=$(git rev-parse HEAD) \
-//	  -X github.com/MochaCosine1206/orchestra/internal/version.Date=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+//		go build -ldflags "-X github.com/MochaCosine1206/orchestra/internal/version.Version=v1.2.3 \
+//		  -X github.com/MochaCosine1206/orchestra/internal/version.Commit=$(git rev-parse HEAD) \
+//		  -X github.com/MochaCosine1206/orchestra/internal/version.Date=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 //
-//   - Version: semantic version tag (e.g. "v1.2.3"). Default: "dev".
-//   - Commit:  full git commit SHA of the build. Default: "none".
-//   - Date:    UTC timestamp of when the binary was built. Default: "unknown".
+//	  - Version: semantic version tag (e.g. "v1.2.3"). Default: "dev".
+//	  - Commit:  full git commit SHA of the build. Default: "none".
+//	  - Date:    UTC timestamp of when the binary was built. Default: "unknown".
 var (
 	Version = "dev"
 	Commit  = "none"

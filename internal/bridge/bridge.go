@@ -26,8 +26,8 @@ type Bridge struct {
 
 	// Idle timeout
 	activityMu   sync.Mutex
-	lastActivity  time.Time
-	idleCancel    context.CancelFunc
+	lastActivity time.Time
+	idleCancel   context.CancelFunc
 }
 
 // New creates a new Bridge from config.

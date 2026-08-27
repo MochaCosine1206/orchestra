@@ -132,7 +132,6 @@ func New(opts ConductorOpts) (*Conductor, error) {
 		return err
 	}
 
-
 	// B-145: Wire merge with skip-branches support for crash recovery.
 	mon.MergeFuncWithSkip = func(ctx context.Context, testCmd string, review bool, skipBranches []string) error {
 		_, err := c.Merge(ctx, MergeOpts{TestCmd: testCmd, Review: review, SkipBranches: skipBranches})

@@ -8,8 +8,8 @@ import (
 )
 
 func TestEstimateContextBudgetUnderThreshold(t *testing.T) {
-	spec := strings.Repeat("x", 1000)     // ~250 tokens
-	prompt := strings.Repeat("y", 500)     // ~125 tokens
+	spec := strings.Repeat("x", 1000)  // ~250 tokens
+	prompt := strings.Repeat("y", 500) // ~125 tokens
 	estimated, overBudget, details := EstimateContextBudget(spec, prompt)
 
 	if overBudget {

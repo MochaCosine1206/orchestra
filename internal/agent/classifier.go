@@ -20,8 +20,8 @@ type FailureType struct {
 
 // Pattern regexes (compiled once).
 var (
-	ratePattern    = regexp.MustCompile(`(?i)429|rate.?limit|too many requests|rate_limit_error`)
-	sessionPattern = regexp.MustCompile(`(?i)limit will reset|usage.?limit|session.?limit|quota.?exceed|billing.?limit|hit.?your.?limit`)
+	ratePattern          = regexp.MustCompile(`(?i)429|rate.?limit|too many requests|rate_limit_error`)
+	sessionPattern       = regexp.MustCompile(`(?i)limit will reset|usage.?limit|session.?limit|quota.?exceed|billing.?limit|hit.?your.?limit`)
 	contextPattern       = regexp.MustCompile(`(?i)context.?limit|context.?window|compaction|maximum.?context|token.?limit|context.?length|prompt.*(is|too).*long|prompt_too_long`)
 	contentFilterPattern = regexp.MustCompile(`(?i)content.?filter|blocked by content|output.?blocked|safety.?filter`)
 

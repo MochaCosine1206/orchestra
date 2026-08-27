@@ -581,13 +581,13 @@ func mockCoverage(score float64, pass bool, planItems, specItems int, missingIte
 	}
 
 	result := map[string]interface{}{
-		"coverage_score":  score,
+		"coverage_score":   score,
 		"plan_items_found": planItems,
 		"spec_items_found": specItems,
-		"missing_items":   missing,
-		"covered_items":   []coverageMatch{},
-		"pass":            pass,
-		"summary":         fmt.Sprintf("Coverage: %.0f%%", score*100),
+		"missing_items":    missing,
+		"covered_items":    []coverageMatch{},
+		"pass":             pass,
+		"summary":          fmt.Sprintf("Coverage: %.0f%%", score*100),
 	}
 	b, _ := json.Marshal(result)
 	return string(b)
@@ -596,9 +596,9 @@ func mockCoverage(score float64, pass bool, planItems, specItems int, missingIte
 func TestGenerateSpecWithValidation_PassesFirstTry(t *testing.T) {
 	// Sequence: gen(1) → checklist(2) → coverage passing(3) = 3 calls total
 	mock := &MockRunner{Outputs: []string{
-		validSpecJSON,                                   // gen call
-		mockChecklist(5),                                // checklist extraction
-		mockCoverage(0.95, true, 5, 5, nil),             // coverage scoring — pass
+		validSpecJSON,                       // gen call
+		mockChecklist(5),                    // checklist extraction
+		mockCoverage(0.95, true, 5, 5, nil), // coverage scoring — pass
 	}}
 	c := &Conductor{
 		Runner:   mock,
@@ -635,12 +635,12 @@ func TestGenerateSpecWithValidation_CorrectOnSecondAttempt(t *testing.T) {
 
 	// Sequence: gen1(1) → checklist1(2) → coverage1 fail(3) → gen2(4) → checklist2(5) → coverage2 pass(6)
 	mock := &MockRunner{Outputs: []string{
-		validSpecJSON,                                       // gen1
-		mockChecklist(5),                                    // checklist1
-		mockCoverage(0.60, false, 5, 3, gaps),               // coverage1 — fail
-		validSpecJSON,                                       // gen2
-		mockChecklist(5),                                    // checklist2
-		mockCoverage(0.95, true, 5, 5, nil),                 // coverage2 — pass
+		validSpecJSON,                         // gen1
+		mockChecklist(5),                      // checklist1
+		mockCoverage(0.60, false, 5, 3, gaps), // coverage1 — fail
+		validSpecJSON,                         // gen2
+		mockChecklist(5),                      // checklist2
+		mockCoverage(0.95, true, 5, 5, nil),   // coverage2 — pass
 	}}
 	c := &Conductor{
 		Runner:   mock,

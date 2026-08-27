@@ -73,17 +73,17 @@ var toolColorMap = map[string]lipgloss.Color{
 	"Write":        lipgloss.Color("#22C55E"),
 	"NotebookEdit": lipgloss.Color("#22C55E"),
 	// Execution (orange — active operations)
-	"Bash":         lipgloss.Color("#F97316"),
-	"Task":         lipgloss.Color("#F97316"),
-	"Skill":        lipgloss.Color("#F97316"),
+	"Bash":  lipgloss.Color("#F97316"),
+	"Task":  lipgloss.Color("#F97316"),
+	"Skill": lipgloss.Color("#F97316"),
 	// Web / external (purple — external data)
-	"WebSearch":    lipgloss.Color("#A855F7"),
-	"WebFetch":     lipgloss.Color("#A855F7"),
+	"WebSearch": lipgloss.Color("#A855F7"),
+	"WebFetch":  lipgloss.Color("#A855F7"),
 	// Planning / meta (cyan — thinking/planning)
-	"TodoWrite":      lipgloss.Color("#06B6D4"),
-	"TodoRead":       lipgloss.Color("#06B6D4"),
-	"EnterPlanMode":  lipgloss.Color("#06B6D4"),
-	"ExitPlanMode":   lipgloss.Color("#06B6D4"),
+	"TodoWrite":       lipgloss.Color("#06B6D4"),
+	"TodoRead":        lipgloss.Color("#06B6D4"),
+	"EnterPlanMode":   lipgloss.Color("#06B6D4"),
+	"ExitPlanMode":    lipgloss.Color("#06B6D4"),
 	"AskUserQuestion": lipgloss.Color("#06B6D4"),
 }
 
@@ -125,9 +125,9 @@ type LogPanel struct {
 	scrollPos        int // first visible line index
 
 	// Conductor timeline mode
-	mode           LogMode
-	conductorLines []string // rendered conductor timeline entries
-	conductorScroll int     // scroll position for conductor view
+	mode            LogMode
+	conductorLines  []string // rendered conductor timeline entries
+	conductorScroll int      // scroll position for conductor view
 }
 
 // NewLogPanel creates a new log panel with auto-scroll enabled.

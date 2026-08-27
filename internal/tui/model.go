@@ -65,8 +65,8 @@ type Model struct {
 	inputActive bool
 
 	// Clarify panel
-	clarifyPanel  *panels.ClarifyPanel
-	clarifyActive bool
+	clarifyPanel    *panels.ClarifyPanel
+	clarifyActive   bool
 	clarifyAnswerCh chan []orchestrator.ClarifyQuestion
 
 	// Toasts
@@ -78,9 +78,9 @@ type Model struct {
 	goalProgress chan goalProgressMsg
 
 	// Conductor observability
-	conductorLogCh     <-chan string
-	lastConductorEvID  int64
-	sessionTaskIDs     []string // task IDs for the current session (for DB event polling)
+	conductorLogCh    <-chan string
+	lastConductorEvID int64
+	sessionTaskIDs    []string // task IDs for the current session (for DB event polling)
 
 	// Session tracking
 	currentSessionID string

@@ -25,9 +25,9 @@ type TaxonomyDomain struct {
 // on each and extracting new work items. Each domain is re-researched
 // on a round-robin schedule (14 domains = each visited every ~2 weeks).
 type TaxonomyScanner struct {
-	ProjectPath  string
-	StateFile    string // tracks which domain was last researched
-	Logger       *slog.Logger
+	ProjectPath string
+	StateFile   string // tracks which domain was last researched
+	Logger      *slog.Logger
 }
 
 // AllDomains returns the 14 taxonomy domains with their research file mappings.
@@ -52,9 +52,9 @@ func AllDomains() []TaxonomyDomain {
 
 // ScanState tracks which domain was last researched and when.
 type ScanState struct {
-	LastDomainID int                  `json:"last_domain_id"`
-	DomainTimes  map[int]string       `json:"domain_times"` // domain ID → last research ISO date
-	UpdatedAt    string               `json:"updated_at"`
+	LastDomainID int            `json:"last_domain_id"`
+	DomainTimes  map[int]string `json:"domain_times"` // domain ID → last research ISO date
+	UpdatedAt    string         `json:"updated_at"`
 }
 
 // NextDomain returns the domain that should be researched next (round-robin).

@@ -42,8 +42,8 @@ type ClarifyQuestion struct {
 type ClarifyResult struct {
 	Questions     []ClarifyQuestion
 	AugmentedGoal string
-	Skipped       bool          // true if no ambiguities found
-	AutoAnswered  bool          // true if defaults were used
+	Skipped       bool // true if no ambiguities found
+	AutoAnswered  bool // true if defaults were used
 	Duration      time.Duration
 }
 

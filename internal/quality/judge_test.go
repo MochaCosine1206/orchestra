@@ -69,8 +69,8 @@ func judgeOutputForScores(scores map[string]float64, pass bool) string {
 func TestEvalJudgeGateCheck_Promote(t *testing.T) {
 	// All high scores -> composite > 0.7 -> PROMOTE
 	scores := map[string]float64{
-		"task_success":          0.9,
-		"context_preservation":  0.8,
+		"task_success":         0.9,
+		"context_preservation": 0.8,
 		"latency":              0.9,
 		"safety":               0.85,
 		"evidence_coverage":    0.8,
@@ -97,8 +97,8 @@ func TestEvalJudgeGateCheck_Promote(t *testing.T) {
 func TestEvalJudgeGateCheck_Hold(t *testing.T) {
 	// Mixed scores -> composite between 0.5 and 0.7 -> HOLD
 	scores := map[string]float64{
-		"task_success":          0.6,
-		"context_preservation":  0.5,
+		"task_success":         0.6,
+		"context_preservation": 0.5,
 		"latency":              0.7,
 		"safety":               0.6,
 		"evidence_coverage":    0.5,
@@ -122,8 +122,8 @@ func TestEvalJudgeGateCheck_Hold(t *testing.T) {
 func TestEvalJudgeGateCheck_Rollback(t *testing.T) {
 	// All low scores -> composite < 0.5 -> ROLLBACK
 	scores := map[string]float64{
-		"task_success":          0.2,
-		"context_preservation":  0.3,
+		"task_success":         0.2,
+		"context_preservation": 0.3,
 		"latency":              0.1,
 		"safety":               0.2,
 		"evidence_coverage":    0.3,

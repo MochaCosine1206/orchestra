@@ -11,7 +11,7 @@ import (
 func TestValidateSpecsAgainstRequirements_Matching(t *testing.T) {
 	// LLM returns no mismatches — specs align with requirements
 	llmResponse := specValidationLLMResult{
-		Mismatches: nil,
+		Mismatches:  nil,
 		Suggestions: []string{"Consider adding error handling tests"},
 	}
 	responseJSON, _ := json.Marshal(llmResponse)

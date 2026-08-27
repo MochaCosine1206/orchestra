@@ -323,21 +323,21 @@ const MaxRefinements = 2
 // Only quality/output failures qualify — not infrastructure failures (no_worktree)
 // or role-specific paths (reviewer/scout) that need different handling.
 var refinableFailures = map[string]bool{
-	"implementer_no_changes":            true,
-	"implementer_writes_gitignored":     true,
-	"implementer_partial_work":          true,
-	"researcher_no_commits":             true,
-	"researcher_no_markdown":            true,
-	"researcher_markdown_too_short":     true,
-	"researcher_insufficient_headings":  true,
-	"researcher_insufficient_urls":      true,
-	"architect_no_commits":              true,
-	"architect_no_markdown":             true,
-	"architect_markdown_too_short":      true,
-	"architect_insufficient_headings":   true,
-	"architect_insufficient_urls":       true,
-	"test_cmd_failed":                   true,
-	"review_rejected":                   true,
+	"implementer_no_changes":           true,
+	"implementer_writes_gitignored":    true,
+	"implementer_partial_work":         true,
+	"researcher_no_commits":            true,
+	"researcher_no_markdown":           true,
+	"researcher_markdown_too_short":    true,
+	"researcher_insufficient_headings": true,
+	"researcher_insufficient_urls":     true,
+	"architect_no_commits":             true,
+	"architect_no_markdown":            true,
+	"architect_markdown_too_short":     true,
+	"architect_insufficient_headings":  true,
+	"architect_insufficient_urls":      true,
+	"test_cmd_failed":                  true,
+	"review_rejected":                  true,
 }
 
 // IsRefinableFailure returns true if the failure reason qualifies for the

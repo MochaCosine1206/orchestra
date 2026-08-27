@@ -254,7 +254,7 @@ type activateOpts struct {
 	ModelStrategy string
 	RepoMap       bool
 	BaseBranch    string
-	LenientDeps  bool
+	LenientDeps   bool
 	Runtime       string
 	MergeMode     string
 	PhaseID       string // B-287: phase identifier for cross-invocation chaining

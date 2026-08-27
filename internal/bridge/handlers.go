@@ -532,10 +532,10 @@ func (b *Bridge) handlePreToolUse(w http.ResponseWriter, r *http.Request) {
 				"decision": "block",
 				"reason":   fmt.Sprintf("Direct commits to '%s' are not allowed by project workflow.", branch),
 				"hookSpecificOutput": map[string]interface{}{
-					"hookEventName":          "PreToolUse",
-					"permissionDecision":     "deny",
+					"hookEventName":            "PreToolUse",
+					"permissionDecision":       "deny",
 					"permissionDecisionReason": fmt.Sprintf("Branch protection: '%s' is a protected branch.", branch),
-					"additionalContext": fmt.Sprintf("BRANCH PROTECTION: You are on '%s' which is a protected branch. You MUST create a feature branch before making any commits. Run: git checkout -b feature/<descriptive-name> — then retry your commit on the new branch. All work must happen on feature branches per project workflow (feature branch → PR → merge to dev).", branch),
+					"additionalContext":        fmt.Sprintf("BRANCH PROTECTION: You are on '%s' which is a protected branch. You MUST create a feature branch before making any commits. Run: git checkout -b feature/<descriptive-name> — then retry your commit on the new branch. All work must happen on feature branches per project workflow (feature branch → PR → merge to dev).", branch),
 				},
 			})
 			return

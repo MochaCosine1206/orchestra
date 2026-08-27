@@ -235,7 +235,7 @@ func TestValidateSpec_FileExclusivityWithinPhase(t *testing.T) {
 	spec := validSpec()
 	spec.Phases[0].Tasks = append(spec.Phases[0].Tasks, SpecTask{
 		Title: "Conflicting task", Role: "implementer",
-		Files: []string{"main.go"}, // same file as first task
+		Files:       []string{"main.go"}, // same file as first task
 		Description: "conflict", AcceptanceCriteria: []string{"done"},
 	})
 	v := ValidateSpec(spec)

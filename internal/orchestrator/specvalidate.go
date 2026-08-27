@@ -19,13 +19,13 @@ type PlanValidationOpts struct {
 
 // PlanValidationResult holds the coverage analysis.
 type PlanValidationResult struct {
-	CoverageScore  float64              `json:"coverage_score"`  // 0.0-1.0
-	PlanItemsFound int                  `json:"plan_items_found"`
-	SpecItemsFound int                  `json:"spec_items_found"`
-	MissingItems   []PlanValidationGap  `json:"missing_items"`
+	CoverageScore  float64               `json:"coverage_score"` // 0.0-1.0
+	PlanItemsFound int                   `json:"plan_items_found"`
+	SpecItemsFound int                   `json:"spec_items_found"`
+	MissingItems   []PlanValidationGap   `json:"missing_items"`
 	CoveredItems   []PlanValidationMatch `json:"covered_items"`
-	Pass           bool                 `json:"pass"` // true if coverage >= 0.8 and no critical gaps
-	Summary        string               `json:"summary"`
+	Pass           bool                  `json:"pass"` // true if coverage >= 0.8 and no critical gaps
+	Summary        string                `json:"summary"`
 }
 
 // PlanValidationGap represents an item from the plan that is missing in the spec.
@@ -39,7 +39,7 @@ type PlanValidationGap struct {
 // PlanValidationMatch represents an item from the plan that is covered by the spec.
 type PlanValidationMatch struct {
 	PlanReference string `json:"plan_reference"`
-	SpecMatch     string `json:"spec_match"` // which phase/task covers it
+	SpecMatch     string `json:"spec_match"`    // which phase/task covers it
 	MatchQuality  string `json:"match_quality"` // "exact", "partial", "inferred"
 }
 

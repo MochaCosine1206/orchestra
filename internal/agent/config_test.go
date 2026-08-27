@@ -32,8 +32,8 @@ func TestAllRoles(t *testing.T) {
 
 func TestDefaultTimeout(t *testing.T) {
 	tests := []struct {
-		role    Role
-		expect  time.Duration
+		role   Role
+		expect time.Duration
 	}{
 		{RoleScout, 30 * time.Minute},
 		{RoleReviewer, 40 * time.Minute},

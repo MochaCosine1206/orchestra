@@ -19,9 +19,9 @@ type RequirementsSpecValidation struct {
 // SpecMismatch represents a single mismatch between a task spec and a requirement.
 type SpecMismatch struct {
 	TaskTitle   string
-	Issue       string  // e.g., "Task uses React but requirements specify Tauri"
-	Severity    string  // "critical", "warning", "info"
-	Requirement string  // the requirement that was violated
+	Issue       string // e.g., "Task uses React but requirements specify Tauri"
+	Severity    string // "critical", "warning", "info"
+	Requirement string // the requirement that was violated
 }
 
 // specValidationLLMResult is the JSON schema for the LLM validation response.

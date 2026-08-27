@@ -11,11 +11,11 @@ import (
 func TestGeneratePRDescription_Full(t *testing.T) {
 	t.Parallel()
 	result := &orchestrator.GoResult{
-		SessionID:   "s-test-123",
-		TaskCount:   5,
-		DoneCount:   4,
-		FailedCount: 1,
-		Duration:    3*time.Minute + 42*time.Second,
+		SessionID:     "s-test-123",
+		TaskCount:     5,
+		DoneCount:     4,
+		FailedCount:   1,
+		Duration:      3*time.Minute + 42*time.Second,
 		StagingBranch: "conductor/s-test-123",
 		MergeResult: &orchestrator.MergeResult{
 			Merged:       []string{"feature/task-1", "feature/task-2", "feature/task-3"},
@@ -81,11 +81,11 @@ func TestGeneratePRDescription_Minimal(t *testing.T) {
 func TestGeneratePRDescription_TestsFailed(t *testing.T) {
 	t.Parallel()
 	result := &orchestrator.GoResult{
-		SessionID: "s-fail",
-		TaskCount: 2,
-		DoneCount: 1,
+		SessionID:   "s-fail",
+		TaskCount:   2,
+		DoneCount:   1,
 		FailedCount: 1,
-		Duration:  30 * time.Second,
+		Duration:    30 * time.Second,
 		MergeResult: &orchestrator.MergeResult{
 			TestsFailed: true,
 		},

@@ -620,11 +620,11 @@ func TestIsRefinableFailure(t *testing.T) {
 
 	// Infrastructure failures and role-specific paths should NOT be refinable
 	nonRefinable := []string{
-		"implementer_no_worktree",  // infra failure — critique can't fix missing worktree
-		"architect_no_worktree",    // infra failure — same reason
-		"researcher_no_worktree",   // infra failure — same reason
-		"reviewer_no_output",       // reviewer role path, different handling
-		"scout_result_too_short",   // scout role path, different handling
+		"implementer_no_worktree", // infra failure — critique can't fix missing worktree
+		"architect_no_worktree",   // infra failure — same reason
+		"researcher_no_worktree",  // infra failure — same reason
+		"reviewer_no_output",      // reviewer role path, different handling
+		"scout_result_too_short",  // scout role path, different handling
 		"rate_limit",
 		"session_limit",
 		"context_exhausted",

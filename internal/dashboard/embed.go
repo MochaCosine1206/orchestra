@@ -19,10 +19,10 @@ func Templates() (*template.Template, error) {
 
 func templateFuncs() template.FuncMap {
 	return template.FuncMap{
-		"safeHTML":       func(s string) template.HTML { return template.HTML(s) },
-		"gt":             func(a, b int) bool { return a > b },
-		"avatarSrc":      AvatarSrc,
-		"statusRingCSS":  StatusRingCSS,
+		"safeHTML":      func(s string) template.HTML { return template.HTML(s) },
+		"gt":            func(a, b int) bool { return a > b },
+		"avatarSrc":     AvatarSrc,
+		"statusRingCSS": StatusRingCSS,
 	}
 }
 

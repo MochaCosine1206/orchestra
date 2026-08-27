@@ -661,14 +661,14 @@ func buildPhaseGoOpts(phase Phase, meta SpecMetadata, global GoSpecOpts, isFinal
 		Runtime:         global.Runtime,
 		MergeMode:       global.MergeMode,
 		Reconcile:       isFinal && global.Reconcile,
-		Clarify:         false, // spec already defines tasks
-		LenientDeps:     true,  // phases are sequential, partial OK
-		MaxFilesPerTask: 25,    // default cap
-		PhaseID:         phase.ID,                // G110: tag tasks with phase
-		KeepStaging:     !isFinal,                // G111: preserve staging for next phase
-		AtomicTasks:     atomicTasks,             // G-CSS-6: enforce atomic tasks
-		SpecTasks:       phase.Tasks,             // Enforce spec-defined roles post-decomposition
-		Sandbox:         global.Sandbox,          // propagate sandbox setting
+		Clarify:         false,          // spec already defines tasks
+		LenientDeps:     true,           // phases are sequential, partial OK
+		MaxFilesPerTask: 25,             // default cap
+		PhaseID:         phase.ID,       // G110: tag tasks with phase
+		KeepStaging:     !isFinal,       // G111: preserve staging for next phase
+		AtomicTasks:     atomicTasks,    // G-CSS-6: enforce atomic tasks
+		SpecTasks:       phase.Tasks,    // Enforce spec-defined roles post-decomposition
+		Sandbox:         global.Sandbox, // propagate sandbox setting
 	}
 
 	return opts

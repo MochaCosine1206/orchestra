@@ -24,9 +24,9 @@ const (
 	RoleIllustrator      Role = "illustrator"
 	RoleVisualReviewer   Role = "visual-reviewer"
 	RoleFunctionalTester Role = "functional-tester"
-	RoleOrchestrator     Role = "orchestrator"      // B-029: spawns orchestra go instead of claude -p
-	RoleDeepResearcher   Role = "deep-researcher"   // recursive research with saturation-based stopping
-	RolePiImplementer    Role = "pi-implementer"    // local LLM (pi/Ollama) for bounded implementation tasks
+	RoleOrchestrator     Role = "orchestrator"    // B-029: spawns orchestra go instead of claude -p
+	RoleDeepResearcher   Role = "deep-researcher" // recursive research with saturation-based stopping
+	RolePiImplementer    Role = "pi-implementer"  // local LLM (pi/Ollama) for bounded implementation tasks
 )
 
 const (

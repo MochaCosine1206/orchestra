@@ -16,34 +16,34 @@ import (
 
 // GoOpts configures a full go (orchestrate goal) invocation.
 type GoOpts struct {
-	Goal            string
-	TestCmd         string
-	Review          bool
-	DryRun          bool
-	Iterative       bool
-	MaxTasks        int
-	MaxFilesPerTask int         // default: 25; 0 = unlimited
-	MaxParallel     int
-	Interval        int         // monitor poll interval in seconds
-	ModelStrategy   string      // "all-opus", "per-role", "all-sonnet"
-	Clarify         bool        // enable goal clarification before decomposition
-	ClarifyMode     ClarifyMode // how to resolve ambiguity questions
-	RepoMap         bool        // include compact repo map in task specs
-	BaseBranch      string      // explicit base branch (empty = auto-detect)
-	Reconcile       bool        // run post-session reconciliation (default true)
-	LenientDeps     bool        // lenient dependency mode: partial predecessor output OK
-	FileEnforcement string      // "", "defense", "pessimistic" — file ownership enforcement level
-	TestFailureMode        string   // "revert_and_refine", "warn_only", "revert_no_refine"
-	TestCmdTimeout         int      // seconds (default: 300)
+	Goal                   string
+	TestCmd                string
+	Review                 bool
+	DryRun                 bool
+	Iterative              bool
+	MaxTasks               int
+	MaxFilesPerTask        int // default: 25; 0 = unlimited
+	MaxParallel            int
+	Interval               int         // monitor poll interval in seconds
+	ModelStrategy          string      // "all-opus", "per-role", "all-sonnet"
+	Clarify                bool        // enable goal clarification before decomposition
+	ClarifyMode            ClarifyMode // how to resolve ambiguity questions
+	RepoMap                bool        // include compact repo map in task specs
+	BaseBranch             string      // explicit base branch (empty = auto-detect)
+	Reconcile              bool        // run post-session reconciliation (default true)
+	LenientDeps            bool        // lenient dependency mode: partial predecessor output OK
+	FileEnforcement        string      // "", "defense", "pessimistic" — file ownership enforcement level
+	TestFailureMode        string      // "revert_and_refine", "warn_only", "revert_no_refine"
+	TestCmdTimeout         int         // seconds (default: 300)
 	DisableActionExpansion bool
 	ReadOnlyFiles          []string
-	Runtime                string   // "local" (default) or "docker"
-	MergeMode              string   // "local" (default) or "pr" (create GitHub PR)
-	MergeStrategy          string   // "batch" (default) or "fifo" (B-280)
-	Hierarchical           bool     // B-281: enable feature cluster decomposition + two-level merge
-	Sandbox                bool     // enable Docker container sandboxing for agents
-	PhaseID                string   // phase identifier for multi-phase GoSpec() (G110)
-	KeepStaging            bool     // preserve staging branch after Go() for inter-phase chaining (G111)
+	Runtime                string     // "local" (default) or "docker"
+	MergeMode              string     // "local" (default) or "pr" (create GitHub PR)
+	MergeStrategy          string     // "batch" (default) or "fifo" (B-280)
+	Hierarchical           bool       // B-281: enable feature cluster decomposition + two-level merge
+	Sandbox                bool       // enable Docker container sandboxing for agents
+	PhaseID                string     // phase identifier for multi-phase GoSpec() (G110)
+	KeepStaging            bool       // preserve staging branch after Go() for inter-phase chaining (G111)
 	AtomicTasks            []string   // G-CSS-6: task titles that must not be split during decomposition
 	SpecTasks              []SpecTask // Spec-defined tasks with roles to enforce post-decomposition
 }

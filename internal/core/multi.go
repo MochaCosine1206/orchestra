@@ -1,4 +1,11 @@
-package orchestra
+// Package core holds the shared layer used by the CLI, the TUI, the dashboard
+// and the daemon: the daemon database and its schema, the fairness engine and
+// scheduling policy, multi-project status aggregation, service installation and
+// locking, PR creation, and the log-stream and markdown renderers.
+//
+// These types previously lived in the repository root as package orchestra.
+// They were moved here so the root holds only module and build configuration.
+package core
 
 import (
 	"context"

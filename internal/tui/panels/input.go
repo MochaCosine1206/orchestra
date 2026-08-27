@@ -21,8 +21,8 @@ type GoalSubmitMsg struct {
 type InputCancelMsg struct{}
 
 const (
-	maxVisibleItems = 8  // visible rows in popup window
-	maxScanDepth    = 4  // directory depth for file scan
+	maxVisibleItems = 8   // visible rows in popup window
+	maxScanDepth    = 4   // directory depth for file scan
 	maxTotalItems   = 200 // cap total candidates to keep things snappy
 )
 

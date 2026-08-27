@@ -24,11 +24,11 @@ func (c *DiscoveryCollector) Name() Source { return SourceDiscovery }
 
 // discoveryIdea represents a parsed row from the Top 30 table.
 type discoveryIdea struct {
-	rank       int
-	title      string
-	domain     string
-	score      float64
-	effort     string
+	rank        int
+	title       string
+	domain      string
+	score       float64
+	effort      string
 	feasibility float64
 	impact      float64
 	uniqueness  float64

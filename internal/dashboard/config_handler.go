@@ -27,10 +27,10 @@ type ConfigSection struct {
 
 // ConfigData holds all configuration data for the config template.
 type ConfigData struct {
-	Sections     []ConfigSection
+	Sections      []ConfigSection
 	ThemeSwatches []ThemeSwatch
-	SandboxEnv   string
-	SandboxNote  string
+	SandboxEnv    string
+	SandboxNote   string
 }
 
 // ThemeSwatch represents a clickable theme option.

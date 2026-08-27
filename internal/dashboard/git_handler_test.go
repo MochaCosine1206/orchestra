@@ -129,11 +129,11 @@ func TestHandleGitWithMergeQueue(t *testing.T) {
 	body := w.Body.String()
 
 	checks := []string{
-		"merging",           // staging status + mq status
-		"feature/t-mq",     // branch in merge queue
-		"#1",               // position
-		"tier 2",           // resolution tier
-		"conflicts",        // conflict indicator
+		"merging",      // staging status + mq status
+		"feature/t-mq", // branch in merge queue
+		"#1",           // position
+		"tier 2",       // resolution tier
+		"conflicts",    // conflict indicator
 	}
 	for _, check := range checks {
 		if !strings.Contains(body, check) {

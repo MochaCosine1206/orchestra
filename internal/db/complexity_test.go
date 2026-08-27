@@ -77,10 +77,10 @@ func TestComplexity_FileLockScaling(t *testing.T) {
 		overlap := fileCount / 2 // 50% file overlap between adjacent agents
 
 		var (
-			wg          sync.WaitGroup
-			lockOps     atomic.Int64
-			unlockOps   atomic.Int64
-			contentions atomic.Int64
+			wg             sync.WaitGroup
+			lockOps        atomic.Int64
+			unlockOps      atomic.Int64
+			contentions    atomic.Int64
 			totalLockDur   int64 // nanoseconds, atomic
 			totalUnlockDur int64
 		)
@@ -506,10 +506,11 @@ func TestComplexity_ReDecompositionCascade(t *testing.T) {
 }
 
 // TestComplexity_WideDeepDAG tests a complex DAG that combines width and depth:
-//   Layer 0: 4 independent tasks
-//   Layer 1: 2 tasks (each depends on 2 from layer 0)
-//   Layer 2: 2 tasks (cross-dependencies from layer 1 + layer 0)
-//   Layer 3: 1 final task (depends on both layer 2 tasks)
+//
+//	Layer 0: 4 independent tasks
+//	Layer 1: 2 tasks (each depends on 2 from layer 0)
+//	Layer 2: 2 tasks (cross-dependencies from layer 1 + layer 0)
+//	Layer 3: 1 final task (depends on both layer 2 tasks)
 //
 // This is a realistic decomposition for a complex feature touching 8+ files.
 func TestComplexity_WideDeepDAG(t *testing.T) {

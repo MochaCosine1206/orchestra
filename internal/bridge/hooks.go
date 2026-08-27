@@ -58,10 +58,10 @@ type AskUserQuestionInput struct {
 
 // AskUserQ is a single question in AskUserQuestion.
 type AskUserQ struct {
-	Question    string         `json:"question"`
-	Header      string         `json:"header"`
-	MultiSelect bool           `json:"multiSelect"`
-	Options     []AskUserOpt   `json:"options"`
+	Question    string       `json:"question"`
+	Header      string       `json:"header"`
+	MultiSelect bool         `json:"multiSelect"`
+	Options     []AskUserOpt `json:"options"`
 }
 
 // AskUserOpt is an option for AskUserQuestion.
@@ -81,7 +81,7 @@ type HookResponse struct {
 
 // HookSpecificOutput wraps event-specific output.
 type HookSpecificOutput struct {
-	HookEventName string           `json:"hookEventName,omitempty"`
+	HookEventName string              `json:"hookEventName,omitempty"`
 	Decision      *PermissionDecision `json:"decision,omitempty"`
 }
 

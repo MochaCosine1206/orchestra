@@ -58,8 +58,8 @@ type ClaudeRunner interface {
 
 // ExecRunner implements ClaudeRunner using os/exec.
 type ExecRunner struct {
-	ClaudePath string          // default: "claude"
-	Logger     func(string)    // optional logger for CLI invocations
+	ClaudePath string       // default: "claude"
+	Logger     func(string) // optional logger for CLI invocations
 }
 
 // Run executes `claude -p <prompt>` and returns the output.
@@ -150,10 +150,10 @@ func ExtractStructuredOutput(jsonResponse string) (output string, reasoning stri
 
 // MockRunner records calls and returns preconfigured responses (for testing).
 type MockRunner struct {
-	Calls    []RunOpts
-	Outputs  []string // returned in order; wraps around
-	Errors   []error  // returned in order; wraps around
-	callIdx  int
+	Calls   []RunOpts
+	Outputs []string // returned in order; wraps around
+	Errors  []error  // returned in order; wraps around
+	callIdx int
 }
 
 // Run records the call and returns the next output/error.

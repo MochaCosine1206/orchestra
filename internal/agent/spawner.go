@@ -50,11 +50,11 @@ type Spawner struct {
 	RepoRoot      string
 	LogsDir       string
 	PidsDir       string
-	SpawnCmd      string        // "claude" default, overridable for tests
-	ModelStrategy ModelStrategy // override strategy (empty = use blackboard or default)
-	Runtime       string       // "local" (default) or "docker"
-	Docker        DockerConfig // Docker settings (only used when Runtime == "docker")
-	Sandbox       *sandbox.Sandbox // non-nil when sandbox mode is enabled
+	SpawnCmd      string             // "claude" default, overridable for tests
+	ModelStrategy ModelStrategy      // override strategy (empty = use blackboard or default)
+	Runtime       string             // "local" (default) or "docker"
+	Docker        DockerConfig       // Docker settings (only used when Runtime == "docker")
+	Sandbox       *sandbox.Sandbox   // non-nil when sandbox mode is enabled
 	LocalRunner   *LocalRunnerConfig // non-nil when local LLM routing is enabled
 
 	// OnTaskCompleted is called after a task transitions to done.
@@ -662,7 +662,7 @@ If gaps remain, describe what is still missing.`
 	if s.LocalRunner != nil && s.LocalRunner.Enabled {
 		// Count files and acceptance criteria from the spec to decide routing
 		fileCount := strings.Count(spec, "| `") // files in ownership table
-		acCount := strings.Count(spec, "- [ ]")  // acceptance criteria checkboxes
+		acCount := strings.Count(spec, "- [ ]") // acceptance criteria checkboxes
 		useLocalRunner = s.LocalRunner.ShouldRouteLocal(role, fileCount, acCount)
 		if useLocalRunner {
 			s.DB.LogEvent(ctx, "local_runner_routed", agentID, taskID,

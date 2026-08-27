@@ -4,19 +4,19 @@ import (
 	"net/http"
 	"strings"
 
-	orchestra "github.com/MochaCosine1206/orchestra"
+	"github.com/MochaCosine1206/orchestra/internal/core"
 )
 
 // ArtifactType categorizes artifacts for filtering.
 type ArtifactType string
 
 const (
-	ArtifactDiff       ArtifactType = "diff"
-	ArtifactReview     ArtifactType = "review"
-	ArtifactLog        ArtifactType = "log"
-	ArtifactMarkdown   ArtifactType = "markdown"
-	ArtifactResult     ArtifactType = "result"
-	ArtifactReconcile  ArtifactType = "reconcile"
+	ArtifactDiff      ArtifactType = "diff"
+	ArtifactReview    ArtifactType = "review"
+	ArtifactLog       ArtifactType = "log"
+	ArtifactMarkdown  ArtifactType = "markdown"
+	ArtifactResult    ArtifactType = "result"
+	ArtifactReconcile ArtifactType = "reconcile"
 )
 
 // Artifact represents a single artifact entry for display.
@@ -38,13 +38,13 @@ type ArtifactSession struct {
 
 // ArtifactData holds all data for the artifacts template.
 type ArtifactData struct {
-	Sessions       []ArtifactSession
-	FilterType     string
-	FilterSession  string
-	AllTypes       []string
-	AllSessionIDs  []string
-	HasArtifacts   bool
-	PluginNote     string
+	Sessions      []ArtifactSession
+	FilterType    string
+	FilterSession string
+	AllTypes      []string
+	AllSessionIDs []string
+	HasArtifacts  bool
+	PluginNote    string
 }
 
 // handleArtifactsFull renders the artifacts page with data from blackboard and DB.
@@ -68,7 +68,7 @@ func (s *Server) handleArtifactsFull(w http.ResponseWriter, r *http.Request) {
 			Title:     "Reconciliation Report — " + sessionID,
 			Content:   entry.Value,
 		}
-		art.PreviewHTML = orchestra.RenderMarkdown(entry.Value)
+		art.PreviewHTML = core.RenderMarkdown(entry.Value)
 		allArtifacts = append(allArtifacts, art)
 	}
 
@@ -89,7 +89,7 @@ func (s *Server) handleArtifactsFull(w http.ResponseWriter, r *http.Request) {
 			Title:     "Task Result — " + t.Title,
 			Content:   t.Result.String,
 		}
-		art.PreviewHTML = orchestra.RenderMarkdown(t.Result.String)
+		art.PreviewHTML = core.RenderMarkdown(t.Result.String)
 		allArtifacts = append(allArtifacts, art)
 	}
 
@@ -108,7 +108,7 @@ func (s *Server) handleArtifactsFull(w http.ResponseWriter, r *http.Request) {
 			Title:     "Review Report — " + taskID,
 			Content:   entry.Value,
 		}
-		art.PreviewHTML = orchestra.RenderMarkdown(entry.Value)
+		art.PreviewHTML = core.RenderMarkdown(entry.Value)
 		allArtifacts = append(allArtifacts, art)
 	}
 
@@ -133,9 +133,9 @@ func (s *Server) handleArtifactsFull(w http.ResponseWriter, r *http.Request) {
 		}
 		// Use diff renderer if content looks like a diff, otherwise markdown
 		if strings.Contains(entry.Value, "@@") || strings.HasPrefix(entry.Value, "diff ") {
-			art.PreviewHTML = orchestra.RenderDiffView(entry.Value)
+			art.PreviewHTML = core.RenderDiffView(entry.Value)
 		} else {
-			art.PreviewHTML = orchestra.RenderMarkdown(entry.Value)
+			art.PreviewHTML = core.RenderMarkdown(entry.Value)
 		}
 		allArtifacts = append(allArtifacts, art)
 	}

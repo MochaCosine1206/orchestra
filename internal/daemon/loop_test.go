@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	orchestra "github.com/MochaCosine1206/orchestra"
 	"github.com/MochaCosine1206/orchestra/internal/config"
+	"github.com/MochaCosine1206/orchestra/internal/core"
 	"github.com/MochaCosine1206/orchestra/internal/db"
 	"github.com/MochaCosine1206/orchestra/internal/priority"
 	v2 "github.com/MochaCosine1206/orchestra/internal/priority/v2"
@@ -198,12 +198,12 @@ func TestRecalcPriorities_WithEngine(t *testing.T) {
 	t.Setenv("ORCHESTRA_CONFIG_DIR", configDir)
 
 	// Set up global daemon DB
-	daemonDB, err := orchestra.OpenDaemonDB()
+	daemonDB, err := core.OpenDaemonDB()
 	if err != nil {
 		t.Fatalf("OpenDaemonDB: %v", err)
 	}
 	defer daemonDB.Close()
-	if err := orchestra.InitDaemonSchema(context.Background(), daemonDB); err != nil {
+	if err := core.InitDaemonSchema(context.Background(), daemonDB); err != nil {
 		t.Fatalf("InitDaemonSchema: %v", err)
 	}
 
@@ -256,12 +256,12 @@ func TestLaunchQueueEntry_RecordsRunHistory(t *testing.T) {
 	configDir := t.TempDir()
 	t.Setenv("ORCHESTRA_CONFIG_DIR", configDir)
 
-	daemonDB, err := orchestra.OpenDaemonDB()
+	daemonDB, err := core.OpenDaemonDB()
 	if err != nil {
 		t.Fatalf("OpenDaemonDB: %v", err)
 	}
 	defer daemonDB.Close()
-	orchestra.InitDaemonSchema(context.Background(), daemonDB)
+	core.InitDaemonSchema(context.Background(), daemonDB)
 
 	// Insert a queue entry
 	ctx := context.Background()
@@ -278,7 +278,7 @@ func TestLaunchQueueEntry_RecordsRunHistory(t *testing.T) {
 	}
 	d.DB = daemonDB
 
-	entry := &orchestra.QueueEntry{
+	entry := &core.QueueEntry{
 		ID:          "q-launch-1",
 		ProjectPath: "/tmp/nonexistent-project",
 		TaskID:      "test goal",
@@ -437,12 +437,12 @@ func TestRunOnce_V2ScoringEngine(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("ORCHESTRA_CONFIG_DIR", dir)
 
-	daemonDB, err := orchestra.OpenDaemonDB()
+	daemonDB, err := core.OpenDaemonDB()
 	if err != nil {
 		t.Fatalf("OpenDaemonDB: %v", err)
 	}
 	defer daemonDB.Close()
-	if err := orchestra.InitDaemonSchema(context.Background(), daemonDB); err != nil {
+	if err := core.InitDaemonSchema(context.Background(), daemonDB); err != nil {
 		t.Fatalf("InitDaemonSchema: %v", err)
 	}
 
@@ -480,12 +480,12 @@ func TestRunOnce_V2FallbackToV1(t *testing.T) {
 	dir := t.TempDir()
 	t.Setenv("ORCHESTRA_CONFIG_DIR", dir)
 
-	daemonDB, err := orchestra.OpenDaemonDB()
+	daemonDB, err := core.OpenDaemonDB()
 	if err != nil {
 		t.Fatalf("OpenDaemonDB: %v", err)
 	}
 	defer daemonDB.Close()
-	orchestra.InitDaemonSchema(context.Background(), daemonDB)
+	core.InitDaemonSchema(context.Background(), daemonDB)
 
 	// Insert a queue entry for v1 recalc
 	ctx := context.Background()
@@ -536,12 +536,12 @@ func TestRecalcPriorities_EmptyQueue(t *testing.T) {
 	configDir := t.TempDir()
 	t.Setenv("ORCHESTRA_CONFIG_DIR", configDir)
 
-	daemonDB, err := orchestra.OpenDaemonDB()
+	daemonDB, err := core.OpenDaemonDB()
 	if err != nil {
 		t.Fatalf("OpenDaemonDB: %v", err)
 	}
 	defer daemonDB.Close()
-	orchestra.InitDaemonSchema(context.Background(), daemonDB)
+	core.InitDaemonSchema(context.Background(), daemonDB)
 
 	engine := priority.NewEngine(nil, "test")
 	d, err := New(engine, func(string) {})

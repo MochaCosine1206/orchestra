@@ -21,19 +21,19 @@ import (
 
 // DecomposeOpts configures a decompose invocation.
 type DecomposeOpts struct {
-	Goal                  string
-	MaxTasks              int         // default: 8
-	MaxFilesPerTask       int         // default: 25; 0 = unlimited
-	Critique              string      // reviewer feedback for re-decomposition
-	DryRun                bool        // show plan without creating tasks
-	Clarify               bool        // enable goal clarification before decomposition
-	ClarifyMode           ClarifyMode // how to resolve ambiguity questions
-	DisableActionExpansion bool       // B-240d: skip expandVagueFileActions
-	ReadOnlyFiles         []string    // B-240c: files excluded from task file lists
-	Hierarchical          bool        // B-281: enable feature cluster decomposition
-	AtomicTasks           []string    // G-CSS-6: task titles that must not be split
-	SpecTasks             []SpecTask  // Spec-defined tasks with roles to enforce post-decomposition
-	OriginalGoal          string      // Pre-expansion goal text for plan cache hashing (set by Go())
+	Goal                   string
+	MaxTasks               int         // default: 8
+	MaxFilesPerTask        int         // default: 25; 0 = unlimited
+	Critique               string      // reviewer feedback for re-decomposition
+	DryRun                 bool        // show plan without creating tasks
+	Clarify                bool        // enable goal clarification before decomposition
+	ClarifyMode            ClarifyMode // how to resolve ambiguity questions
+	DisableActionExpansion bool        // B-240d: skip expandVagueFileActions
+	ReadOnlyFiles          []string    // B-240c: files excluded from task file lists
+	Hierarchical           bool        // B-281: enable feature cluster decomposition
+	AtomicTasks            []string    // G-CSS-6: task titles that must not be split
+	SpecTasks              []SpecTask  // Spec-defined tasks with roles to enforce post-decomposition
+	OriginalGoal           string      // Pre-expansion goal text for plan cache hashing (set by Go())
 }
 
 // DecomposeResult captures the outcome of decomposition.
@@ -47,13 +47,13 @@ type DecomposeResult struct {
 
 // DecomposedTask represents a single task from decomposition output.
 type DecomposedTask struct {
-	ID          string        `json:"id"`
-	Title       string        `json:"title"`
-	Description string        `json:"description"`
-	Role        string        `json:"role"`
-	Priority      int           `json:"priority"`
-	PriorityLabel string        `json:"priority_label"`
-	DependsOn     FlexStringArr `json:"depends_on"`
+	ID                 string        `json:"id"`
+	Title              string        `json:"title"`
+	Description        string        `json:"description"`
+	Role               string        `json:"role"`
+	Priority           int           `json:"priority"`
+	PriorityLabel      string        `json:"priority_label"`
+	DependsOn          FlexStringArr `json:"depends_on"`
 	Files              []string      `json:"files"`
 	AdditionalFiles    []string      `json:"additional_files,omitempty"` // G137: new files not in goal enum
 	AcceptanceCriteria string        `json:"acceptance_criteria"`
@@ -163,14 +163,14 @@ func buildEnumConstrainedSchema(goalFiles []string, hierarchical bool) string {
 
 	// Build task properties
 	taskProps := map[string]interface{}{
-		"title":       map[string]interface{}{"type": "string", "description": "Short imperative title"},
-		"description": map[string]interface{}{"type": "string", "description": "Detailed description of what to do"},
-		"role":        map[string]interface{}{"type": "string", "enum": []string{"implementer", "deep-researcher", "architect", "reviewer", "scout", "pi-implementer"}},
-		"priority":    map[string]interface{}{"type": "integer", "minimum": 1, "maximum": 5},
-		"priority_label": map[string]interface{}{"type": "string"},
-		"depends_on":  map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "string"}},
-		"files":       map[string]interface{}{"type": "array", "items": filesItems, "description": "Existing file paths from the goal — use ONLY paths from this enum list"},
-		"additional_files": map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "string"}, "description": "New files this task creates that are not listed in the goal"},
+		"title":               map[string]interface{}{"type": "string", "description": "Short imperative title"},
+		"description":         map[string]interface{}{"type": "string", "description": "Detailed description of what to do"},
+		"role":                map[string]interface{}{"type": "string", "enum": []string{"implementer", "deep-researcher", "architect", "reviewer", "scout", "pi-implementer"}},
+		"priority":            map[string]interface{}{"type": "integer", "minimum": 1, "maximum": 5},
+		"priority_label":      map[string]interface{}{"type": "string"},
+		"depends_on":          map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "string"}},
+		"files":               map[string]interface{}{"type": "array", "items": filesItems, "description": "Existing file paths from the goal — use ONLY paths from this enum list"},
+		"additional_files":    map[string]interface{}{"type": "array", "items": map[string]interface{}{"type": "string"}, "description": "New files this task creates that are not listed in the goal"},
 		"acceptance_criteria": map[string]interface{}{"type": "string", "description": "Markdown checkboxes with testable criteria"},
 	}
 

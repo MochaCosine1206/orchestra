@@ -58,8 +58,8 @@ func TestParseBuildError(t *testing.T) {
 			wantLen: 0,
 		},
 		{
-			name:   "mixed_errors",
-			stderr: "could not import \"os\"\nsyntax error: unexpected }\ncannot use 5 as string in return",
+			name:    "mixed_errors",
+			stderr:  "could not import \"os\"\nsyntax error: unexpected }\ncannot use 5 as string in return",
 			wantLen: 3,
 		},
 	}

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	orchestra "github.com/MochaCosine1206/orchestra"
+	"github.com/MochaCosine1206/orchestra/internal/core"
 	"github.com/MochaCosine1206/orchestra/internal/db"
 )
 
@@ -23,7 +23,7 @@ func setupDaemonTestDB(t *testing.T) (string, *db.DB) {
 	if err != nil {
 		t.Fatalf("opening daemon db: %v", err)
 	}
-	if err := orchestra.InitDaemonSchema(context.Background(), d); err != nil {
+	if err := core.InitDaemonSchema(context.Background(), d); err != nil {
 		t.Fatalf("init daemon schema: %v", err)
 	}
 	t.Cleanup(func() { d.Close() })
@@ -61,14 +61,14 @@ func TestDaemonSingletonLock(t *testing.T) {
 	t.Setenv("ORCHESTRA_CONFIG_DIR", tmpDir)
 
 	// First lock should succeed.
-	fd, err := orchestra.AcquireLock()
+	fd, err := core.AcquireLock()
 	if err != nil {
 		t.Fatalf("first AcquireLock failed: %v", err)
 	}
-	defer orchestra.ReleaseLock(fd)
+	defer core.ReleaseLock(fd)
 
 	// Second lock should fail with "already running".
-	_, err = orchestra.AcquireLock()
+	_, err = core.AcquireLock()
 	if err == nil {
 		t.Fatal("second AcquireLock should have failed")
 	}

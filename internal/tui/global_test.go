@@ -6,8 +6,8 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
-	orchestra "github.com/MochaCosine1206/orchestra"
 	"github.com/MochaCosine1206/orchestra/internal/config"
+	"github.com/MochaCosine1206/orchestra/internal/core"
 )
 
 func TestGlobalModel_InitReturnsCmd(t *testing.T) {
@@ -31,8 +31,8 @@ func TestGlobalModel_NavigateUpDown(t *testing.T) {
 	}
 	gm := NewGlobalModel(projects)
 	// Simulate status data so projectCount works
-	gm.status = &orchestra.GlobalStatus{
-		Projects: []orchestra.ProjectSummary{
+	gm.status = &core.GlobalStatus{
+		Projects: []core.ProjectSummary{
 			{Name: "alpha", Path: "/tmp/a"},
 			{Name: "beta", Path: "/tmp/b"},
 			{Name: "gamma", Path: "/tmp/c"},
@@ -75,8 +75,8 @@ func TestGlobalModel_NavigateUpDown(t *testing.T) {
 func TestGlobalModel_NumberKeySelection(t *testing.T) {
 	t.Parallel()
 	gm := NewGlobalModel(nil)
-	gm.status = &orchestra.GlobalStatus{
-		Projects: []orchestra.ProjectSummary{
+	gm.status = &core.GlobalStatus{
+		Projects: []core.ProjectSummary{
 			{Name: "alpha"},
 			{Name: "beta"},
 			{Name: "gamma"},
@@ -104,8 +104,8 @@ func TestGlobalModel_ViewRendersProjectList(t *testing.T) {
 	gm.width = 120
 	gm.height = 40
 	gm.ready = true
-	gm.status = &orchestra.GlobalStatus{
-		Projects: []orchestra.ProjectSummary{
+	gm.status = &core.GlobalStatus{
+		Projects: []core.ProjectSummary{
 			{Name: "alpha", Path: "/tmp/a", ActiveSession: "s-123", AgentCount: 2, TasksDone: 5, TasksPending: 3},
 			{Name: "beta", Path: "/tmp/b", AgentCount: 0, TasksDone: 10, TasksPending: 0},
 		},
@@ -133,8 +133,8 @@ func TestGlobalModel_SummaryBarAggregates(t *testing.T) {
 	t.Parallel()
 	gm := NewGlobalModel(nil)
 	gm.width = 100
-	gm.status = &orchestra.GlobalStatus{
-		Projects: []orchestra.ProjectSummary{
+	gm.status = &core.GlobalStatus{
+		Projects: []core.ProjectSummary{
 			{AgentCount: 3, TasksDone: 10, TasksPending: 2, ActiveSession: "s1"},
 			{AgentCount: 1, TasksDone: 5, TasksPending: 0},
 		},
@@ -155,8 +155,8 @@ func TestGlobalModel_SummaryBarAggregates(t *testing.T) {
 func TestGlobalModel_DataMsgUpdatesStatus(t *testing.T) {
 	t.Parallel()
 	gm := NewGlobalModel(nil)
-	status := &orchestra.GlobalStatus{
-		Projects: []orchestra.ProjectSummary{
+	status := &core.GlobalStatus{
+		Projects: []core.ProjectSummary{
 			{Name: "proj1", LastActivity: time.Now()},
 		},
 	}

@@ -14,8 +14,8 @@ import (
 	"sync"
 	"time"
 
-	orchestra "github.com/MochaCosine1206/orchestra"
 	"github.com/MochaCosine1206/orchestra/internal/config"
+	"github.com/MochaCosine1206/orchestra/internal/core"
 	"github.com/MochaCosine1206/orchestra/internal/db"
 	"github.com/MochaCosine1206/orchestra/internal/eval"
 	"github.com/MochaCosine1206/orchestra/internal/orchestrator"
@@ -38,9 +38,9 @@ type Daemon struct {
 	Watchdog      *Watchdog
 	Engine        *priority.Engine
 	ScoringEngine *v2.ScoringEngine // v2 priority engine (nil = v1 fallback)
-	Scheduler     *orchestra.Scheduler
-	DB            *db.DB // global daemon DB for queue operations
-	Governor      GovernorChecker    // optional: Phase 5 resource governor pre-spawn gate
+	Scheduler     *core.Scheduler
+	DB            *db.DB          // global daemon DB for queue operations
+	Governor      GovernorChecker // optional: Phase 5 resource governor pre-spawn gate
 	Log           func(string)
 
 	interval time.Duration
@@ -72,21 +72,21 @@ func New(engine *priority.Engine, log func(string)) (*Daemon, error) {
 
 // CycleResult captures what happened during one daemon cycle.
 type CycleResult struct {
-	QuietHours     bool
-	ConfigReloaded bool
-	CronDue        []ScheduleConfig
-	CollectedItems int
-	ScoredItems    int
-	QueuePopulated bool
-	WatchdogStatus []ProjectStatus
+	QuietHours      bool
+	ConfigReloaded  bool
+	CronDue         []ScheduleConfig
+	CollectedItems  int
+	ScoredItems     int
+	QueuePopulated  bool
+	WatchdogStatus  []ProjectStatus
 	SpawnSkipped    bool
 	SpawnReason     string
 	GovernorBlocked bool
-	SelectedEntry  *orchestra.QueueEntry
-	PreemptChecked bool
-	EvalRan        bool
-	EvalPassed     int
-	EvalFailed     int
+	SelectedEntry   *core.QueueEntry
+	PreemptChecked  bool
+	EvalRan         bool
+	EvalPassed      int
+	EvalFailed      int
 }
 
 // Run starts the daemon loop and blocks until ctx is cancelled or Stop is called.
@@ -464,7 +464,7 @@ func (d *Daemon) loadProjects() []ProjectInfo {
 // and launches the conductor as a detached process in the project directory.
 // After successful completion, runs Phase 6 post-session eval if the project
 // has eval scenarios configured. An optional CycleResult receives eval outcomes.
-func (d *Daemon) launchQueueEntry(ctx context.Context, entry *orchestra.QueueEntry, crs ...*CycleResult) error {
+func (d *Daemon) launchQueueEntry(ctx context.Context, entry *core.QueueEntry, crs ...*CycleResult) error {
 	sessionID := db.GenID("s")
 	goal := entry.TaskID // task_id stores the goal text in priority_queue
 
@@ -588,16 +588,16 @@ func (d *Daemon) launchQueueEntry(ctx context.Context, entry *orchestra.QueueEnt
 	var cmd *exec.Cmd
 	mode := entry.ExecutionMode
 	if mode == "" {
-		mode = orchestra.ModeConduct
+		mode = core.ModeConduct
 	}
 
 	// All factory outputs go to ~/symphonies/ for easy access.
 	symphoniesDir := filepath.Join(os.Getenv("HOME"), "symphonies")
 	var researchDir string
 	switch entry.ExecutionMode {
-	case orchestra.ModeGrant:
+	case core.ModeGrant:
 		researchDir = filepath.Join(symphoniesDir, "grants")
-	case orchestra.ModeResearch:
+	case core.ModeResearch:
 		researchDir = filepath.Join(symphoniesDir, "research")
 	default:
 		researchDir = filepath.Join(entry.ProjectPath, "notes", "factory-research")
@@ -608,7 +608,7 @@ func (d *Daemon) launchQueueEntry(ctx context.Context, entry *orchestra.QueueEnt
 	outputFile := filepath.Join(researchDir, sessionID+".md")
 
 	switch mode {
-	case orchestra.ModeResearch:
+	case core.ModeResearch:
 		// Run research/grant from temp dir to avoid branch pollution in the project repo.
 		// Claude's hooks can switch branches — running from the project dir corrupts the repo state.
 		tmpDir, _ := os.MkdirTemp("", "orchestra-research-"+sessionID)
@@ -672,7 +672,7 @@ Search the web extensively. Cite sources. Write the output to: %s`, time.Now().F
 			cmd.Dir = os.TempDir()
 		}
 
-	case orchestra.ModeGrant:
+	case core.ModeGrant:
 		tmpDir, _ := os.MkdirTemp("", "orchestra-grant-"+sessionID)
 		if tmpDir != "" {
 			defer os.RemoveAll(tmpDir)
@@ -732,7 +732,7 @@ Write the output to: %s`, goal, time.Now().Format("2006-01-02"), outputFile)
 			cmd.Dir = os.TempDir()
 		}
 
-	case orchestra.ModeDirect:
+	case core.ModeDirect:
 		d.logf("spawn: direct mode for %s", sessionID)
 		cmd = exec.CommandContext(ctx, "claude", "-p", goal, "--output-format", "stream-json", "--verbose", "--model", "claude-opus-4-6", "--permission-mode", "bypassPermissions")
 		cmd.Dir = entry.ProjectPath
@@ -841,8 +841,8 @@ When no file conflicts AND all requirements covered, output: COMPLETE
 	}
 
 	// Capture stdout/stderr for non-conductor modes (research, grant, direct)
-	d.logf("spawn: mode=%q conduct=%q match=%v", mode, orchestra.ModeConduct, mode != orchestra.ModeConduct)
-	if mode != orchestra.ModeConduct {
+	d.logf("spawn: mode=%q conduct=%q match=%v", mode, core.ModeConduct, mode != core.ModeConduct)
+	if mode != core.ModeConduct {
 		logPath := filepath.Join(logDir, sessionID+".log")
 		d.logf("spawn: creating log at %s", logPath)
 		if logFile, err := os.Create(logPath); err == nil {
@@ -896,13 +896,13 @@ When no file conflicts AND all requirements covered, output: COMPLETE
 
 	// Feedback loop: parse completed research/grant output for action items
 	// and ingest them back into work_items queue.
-	if status == "completed" && (mode == orchestra.ModeGrant || mode == orchestra.ModeResearch) {
+	if status == "completed" && (mode == core.ModeGrant || mode == core.ModeResearch) {
 		d.ingestActionItems(ctx, outputFile, goal)
 	}
 
 	// Research → Build handoff: when research completes, automatically create
 	// a build work item that uses the requirements doc to build the actual code.
-	if status == "completed" && mode == orchestra.ModeResearch {
+	if status == "completed" && mode == core.ModeResearch {
 		buildTitle := "Build: " + goal
 		buildDesc := fmt.Sprintf("Build the MVP for %s using the requirements document at %s. Follow the technical architecture, code standards, and acceptance criteria from the research.", goal, outputFile)
 		sourceID := "build-" + d.slugify(goal)

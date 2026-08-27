@@ -17,7 +17,7 @@ type Checkpoint struct {
 	TaskID            string   `json:"task_id"`
 	CommitHashes      []string `json:"commits"`
 	FilesModified     []string `json:"files_modified"`
-	TestsPassing      string   `json:"tests_passing"`      // "unknown", "yes", "no"
+	TestsPassing      string   `json:"tests_passing"` // "unknown", "yes", "no"
 	UncommittedFiles  int      `json:"uncommitted_files"`
 	EstimatedProgress string   `json:"estimated_progress"` // "early", "mid", "late"
 	LogTailSummary    string   `json:"log_tail_summary"`   // last meaningful actions

@@ -137,4 +137,3 @@ func (g *CoverageRatchetGate) setThreshold(ctx context.Context, value float64) e
 	}
 	return nil
 }
-

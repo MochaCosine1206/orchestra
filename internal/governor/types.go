@@ -51,7 +51,7 @@ type ResourceGovernor struct {
 	RateLimit *RateLimitTracker
 
 	// CircuitBreakers keyed by agent/task ID.
-	circuitMu      sync.RWMutex
+	circuitMu       sync.RWMutex
 	circuitBreakers map[string]*CircuitBreaker
 }
 

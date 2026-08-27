@@ -10,8 +10,8 @@ import (
 	"path/filepath"
 	"syscall"
 
-	orchestra "github.com/MochaCosine1206/orchestra"
 	"github.com/MochaCosine1206/orchestra/internal/config"
+	"github.com/MochaCosine1206/orchestra/internal/core"
 	"github.com/MochaCosine1206/orchestra/internal/daemon"
 	"github.com/MochaCosine1206/orchestra/internal/priority"
 	v2 "github.com/MochaCosine1206/orchestra/internal/priority/v2"
@@ -72,21 +72,21 @@ multiple instances. Press Ctrl+C to stop.`,
 
 func runDaemonRun(cmd *cobra.Command, args []string) error {
 	// Acquire singleton lock.
-	fd, err := orchestra.AcquireLock()
+	fd, err := core.AcquireLock()
 	if err != nil {
 		return err
 	}
-	defer orchestra.ReleaseLock(fd)
+	defer core.ReleaseLock(fd)
 
 	// Open and initialize the daemon database.
-	d, err := orchestra.OpenDaemonDB()
+	d, err := core.OpenDaemonDB()
 	if err != nil {
 		return fmt.Errorf("opening daemon database: %w", err)
 	}
 	defer d.Close()
 
 	ctx := cmd.Context()
-	if err := orchestra.InitDaemonSchema(ctx, d); err != nil {
+	if err := core.InitDaemonSchema(ctx, d); err != nil {
 		return fmt.Errorf("initializing daemon schema: %w", err)
 	}
 
@@ -112,7 +112,7 @@ func runDaemonRun(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("creating daemon: %w", err)
 	}
 	dmn.DB = d
-	dmn.Scheduler = &orchestra.Scheduler{DB: d, MaxConcurrent: dmn.Loader.Config.MaxConcurrent}
+	dmn.Scheduler = &core.Scheduler{DB: d, MaxConcurrent: dmn.Loader.Config.MaxConcurrent}
 
 	// Wire v2 ScoringEngine with collectors
 	configDir, _ := config.GlobalDir()
@@ -177,7 +177,7 @@ func newDaemonStartCmd() *cobra.Command {
 		Use:   "start",
 		Short: "Start the daemon as a background service",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := orchestra.StartService(); err != nil {
+			if err := core.StartService(); err != nil {
 				return fmt.Errorf("starting service: %w", err)
 			}
 			cmd.Println("Orchestra daemon started")
@@ -192,7 +192,7 @@ func newDaemonStopCmd() *cobra.Command {
 		Use:   "stop",
 		Short: "Stop the background daemon service",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := orchestra.StopService(); err != nil {
+			if err := core.StopService(); err != nil {
 				return fmt.Errorf("stopping service: %w", err)
 			}
 			cmd.Println("Orchestra daemon stopped")
@@ -222,14 +222,14 @@ func runDaemonStatus(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
-	d, err := orchestra.OpenDaemonDB()
+	d, err := core.OpenDaemonDB()
 	if err != nil {
 		return fmt.Errorf("opening daemon database: %w", err)
 	}
 	defer d.Close()
 
 	ctx := cmd.Context()
-	if err := orchestra.InitDaemonSchema(ctx, d); err != nil {
+	if err := core.InitDaemonSchema(ctx, d); err != nil {
 		return fmt.Errorf("initializing daemon schema: %w", err)
 	}
 
@@ -260,7 +260,7 @@ func runDaemonStatus(cmd *cobra.Command, args []string) error {
 	}
 
 	// Check if the service is installed and running.
-	svcStatus, err := orchestra.ServiceStatus()
+	svcStatus, err := core.ServiceStatus()
 	if err == nil {
 		var label string
 		switch svcStatus {
@@ -308,7 +308,7 @@ func newDaemonInstallCmd() *cobra.Command {
   - macOS: creates a LaunchAgent plist (no sudo required)
   - Linux: creates a user-level systemd unit (no sudo required)`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := orchestra.Install(); err != nil {
+			if err := core.Install(); err != nil {
 				return fmt.Errorf("installing service: %w", err)
 			}
 			cmd.Println("Orchestra daemon installed as a user-level service")
@@ -324,7 +324,7 @@ func newDaemonUninstallCmd() *cobra.Command {
 		Use:   "uninstall",
 		Short: "Remove the daemon from the OS service manager",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := orchestra.Uninstall(); err != nil {
+			if err := core.Uninstall(); err != nil {
 				return fmt.Errorf("uninstalling service: %w", err)
 			}
 			cmd.Println("Orchestra daemon removed from OS service manager")

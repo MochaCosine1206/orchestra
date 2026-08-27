@@ -83,7 +83,7 @@ type ConflictHunk struct {
 type ConflictResolution struct {
 	Attempted   bool
 	Resolved    bool
-	Tier        string   // "import", "non_overlapping", "complex"
+	Tier        string // "import", "non_overlapping", "complex"
 	FilesFixed  []string
 	FilesFailed []string
 }

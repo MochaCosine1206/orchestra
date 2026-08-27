@@ -868,8 +868,8 @@ func TestResolveGoalFilePaths(t *testing.T) {
 
 		want := map[string]bool{
 			"internal/orchestrator/go.go":        true,
-			"internal/orchestrator/iterative.go":  true,
-			"internal/db/models.go":               true,
+			"internal/orchestrator/iterative.go": true,
+			"internal/db/models.go":              true,
 		}
 		for _, g := range got {
 			if !want[g] {
@@ -935,8 +935,8 @@ func TestFileDifference_BasenameFuzzyMatch(t *testing.T) {
 	t.Run("exact match", func(t *testing.T) {
 		want := []string{"internal/db/models.go", "internal/orchestrator/go.go"}
 		have := map[string]bool{
-			"internal/db/models.go":         true,
-			"internal/orchestrator/go.go":   true,
+			"internal/db/models.go":       true,
+			"internal/orchestrator/go.go": true,
 		}
 		missing := fileDifference(want, have)
 		if len(missing) != 0 {
@@ -1473,8 +1473,8 @@ func TestComputeEffectiveMaxTasks(t *testing.T) {
 		{"unlimited file cap", 8, 0, 50, 8},
 		{"small goal within cap", 8, 15, 10, 8},
 		{"exact fit", 8, 15, 120, 8},
-		{"needs more tasks", 4, 15, 50, 4},   // ceil(50/15) = 4, same as max
-		{"dynamic floor exceeds max", 4, 15, 80, 6}, // ceil(80/15) = 6 > 4
+		{"needs more tasks", 4, 15, 50, 4},              // ceil(50/15) = 4, same as max
+		{"dynamic floor exceeds max", 4, 15, 80, 6},     // ceil(80/15) = 6 > 4
 		{"large goal forces many tasks", 3, 15, 100, 7}, // ceil(100/15) = 7
 		{"one file per task", 2, 1, 5, 5},
 	}

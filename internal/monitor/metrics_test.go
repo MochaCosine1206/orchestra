@@ -291,4 +291,3 @@ func TestMemoryStabilityDuringMonitorCycles(t *testing.T) {
 		t.Errorf("excessive heap growth: %dKB after %d cycles", heapDelta/1024, cycles)
 	}
 }
-

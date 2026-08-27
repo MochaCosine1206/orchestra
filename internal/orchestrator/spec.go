@@ -68,7 +68,7 @@ type PhaseGate struct {
 type SpecContract struct {
 	Name       string `yaml:"name" json:"name"`             // e.g. "OllamaStatusAPI"
 	Definition string `yaml:"definition" json:"definition"` // TypeScript interface or JSON schema
-	Role       string `yaml:"role" json:"role"`              // "producer" or "consumer"
+	Role       string `yaml:"role" json:"role"`             // "producer" or "consumer"
 }
 
 // SpecTask defines a single task within a phase.

@@ -99,10 +99,10 @@ func TestEvalScenariosListCmd(t *testing.T) {
 
 	// Insert a test scenario
 	scenario := db.EvalScenario{
-		ID:   "test-scenario-1",
-		Role: "implementer",
-		Goal: "Fix the authentication bug in login handler",
-		Category: sql.NullString{String: "bugfix", Valid: true},
+		ID:         "test-scenario-1",
+		Role:       "implementer",
+		Goal:       "Fix the authentication bug in login handler",
+		Category:   sql.NullString{String: "bugfix", Valid: true},
 		Difficulty: sql.NullString{String: "medium", Valid: true},
 	}
 	if err := d.InsertEvalScenario(context.Background(), scenario); err != nil {
@@ -165,11 +165,11 @@ func TestEvalReportCmd(t *testing.T) {
 
 	// Insert result
 	result := db.EvalResult{
-		ID:     "test-result-1",
-		RunID:  "test-run-1",
-		Metric: "correctness",
-		Score:  0.95,
-		Weight: 1.0,
+		ID:      "test-result-1",
+		RunID:   "test-run-1",
+		Metric:  "correctness",
+		Score:   0.95,
+		Weight:  1.0,
 		Details: sql.NullString{String: "All tests passed", Valid: true},
 	}
 	if err := d.InsertEvalResult(ctx, result); err != nil {

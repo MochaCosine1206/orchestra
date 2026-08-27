@@ -23,17 +23,17 @@ type ABTestConfig struct {
 
 // ABTestResult holds the outcome of an A/B comparison.
 type ABTestResult struct {
-	BaselineVersion   string
-	CandidateVersion  string
-	BaselineScores    []float64
-	CandidateScores   []float64
-	BaselineMean      float64
-	CandidateMean     float64
-	Delta             float64
-	BootstrapCI       [2]float64 // 95% CI of delta
-	WilcoxonP         float64
-	Verdict           string // "improved", "regressed", "no_change"
-	ScenarioResults   []ABScenarioResult
+	BaselineVersion  string
+	CandidateVersion string
+	BaselineScores   []float64
+	CandidateScores  []float64
+	BaselineMean     float64
+	CandidateMean    float64
+	Delta            float64
+	BootstrapCI      [2]float64 // 95% CI of delta
+	WilcoxonP        float64
+	Verdict          string // "improved", "regressed", "no_change"
+	ScenarioResults  []ABScenarioResult
 }
 
 // ABScenarioResult holds per-scenario results for both versions.
@@ -120,17 +120,17 @@ func RunABTest(ctx context.Context, config ABTestConfig) (*ABTestResult, error) 
 	}
 
 	return &ABTestResult{
-		BaselineVersion:   config.BaselineVersion,
-		CandidateVersion:  config.CandidateVersion,
-		BaselineScores:    baselineScores,
-		CandidateScores:   candidateScores,
-		BaselineMean:      baseMean,
-		CandidateMean:     candMean,
-		Delta:             delta,
-		BootstrapCI:       ci,
-		WilcoxonP:         pValue,
-		Verdict:           verdict,
-		ScenarioResults:   scenarioResults,
+		BaselineVersion:  config.BaselineVersion,
+		CandidateVersion: config.CandidateVersion,
+		BaselineScores:   baselineScores,
+		CandidateScores:  candidateScores,
+		BaselineMean:     baseMean,
+		CandidateMean:    candMean,
+		Delta:            delta,
+		BootstrapCI:      ci,
+		WilcoxonP:        pValue,
+		Verdict:          verdict,
+		ScenarioResults:  scenarioResults,
 	}, nil
 }
 

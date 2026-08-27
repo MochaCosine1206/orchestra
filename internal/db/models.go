@@ -27,18 +27,18 @@ type Task struct {
 	Priority           int
 	PriorityLabel      sql.NullString
 	Role               string
-	AssignedTo    sql.NullString
-	DependsOn     sql.NullString
-	BlockedBy     sql.NullString
-	Worktree      sql.NullString
-	Branch        sql.NullString
-	Result        sql.NullString
-	ConductorID   sql.NullString // FK to conductors table (nullable for backward compat)
-	PhaseID        sql.NullString // Phase identifier for multi-phase GoSpec() (G110)
-	FeatureCluster sql.NullString // Feature cluster name for hierarchical decomposition (B-281)
-	CreatedAt      time.Time
-	StartedAt     sql.NullTime
-	CompletedAt   sql.NullTime
+	AssignedTo         sql.NullString
+	DependsOn          sql.NullString
+	BlockedBy          sql.NullString
+	Worktree           sql.NullString
+	Branch             sql.NullString
+	Result             sql.NullString
+	ConductorID        sql.NullString // FK to conductors table (nullable for backward compat)
+	PhaseID            sql.NullString // Phase identifier for multi-phase GoSpec() (G110)
+	FeatureCluster     sql.NullString // Feature cluster name for hierarchical decomposition (B-281)
+	CreatedAt          time.Time
+	StartedAt          sql.NullTime
+	CompletedAt        sql.NullTime
 }
 
 // FileLock represents a row in the file_locks table.
@@ -108,7 +108,7 @@ type ConductorRecord struct {
 	// Merge state tracking (B-145): crash-recovery for mid-merge failures.
 	MergeStatus       sql.NullString // NULL, "merging", "staging", "done"
 	MergeStartedAt    sql.NullTime
-	MergeBranchesDone []string       // parsed from JSON TEXT column
+	MergeBranchesDone []string // parsed from JSON TEXT column
 }
 
 // MergeQueueEntry represents a row in the merge_queue_entries table (B-280).

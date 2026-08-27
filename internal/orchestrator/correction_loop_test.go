@@ -248,4 +248,3 @@ func TestTruncateOutput(t *testing.T) {
 		})
 	}
 }
-

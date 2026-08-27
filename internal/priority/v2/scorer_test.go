@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-func floatPtr(f float64) *float64 { return &f }
-func intPtr(i int) *int           { return &i }
+func floatPtr(f float64) *float64    { return &f }
+func intPtr(i int) *int              { return &i }
 func timePtr(t time.Time) *time.Time { return &t }
 
 func approxEqual(a, b, tolerance float64) bool {
@@ -23,18 +23,18 @@ func TestWalkthroughItemA(t *testing.T) {
 
 	item := WorkItem{
 		ID:               "wi-A",
-		Source:            SourceGrant,
-		Title:             "UNESCO grant application",
-		Tier:              TierGoalImpl,
-		BasePriority:      0,
-		Deadline:          &deadline,
-		DeadlineType:      "hard",
-		GoalAlignment:     0.9,
-		UserPriorityRank:  intPtr(2),
-		EffortHours:       floatPtr(8),
-		EffortConfidence:  floatPtr(0.7),
-		Status:            StatusPending,
-		CreatedAt:         now,
+		Source:           SourceGrant,
+		Title:            "UNESCO grant application",
+		Tier:             TierGoalImpl,
+		BasePriority:     0,
+		Deadline:         &deadline,
+		DeadlineType:     "hard",
+		GoalAlignment:    0.9,
+		UserPriorityRank: intPtr(2),
+		EffortHours:      floatPtr(8),
+		EffortConfidence: floatPtr(0.7),
+		Status:           StatusPending,
+		CreatedAt:        now,
 	}
 
 	result := ScoreWorkItem(item, now, "")
@@ -72,16 +72,16 @@ func TestWalkthroughItemB(t *testing.T) {
 
 	item := WorkItem{
 		ID:               "wi-B",
-		Source:            SourceBacklog,
-		Title:             "Fix Telegram routing",
-		Tier:              TierTechDebt,
-		BasePriority:      0,
-		GoalAlignment:     0.95,
-		UserPriorityRank:  intPtr(3),
-		EffortHours:       floatPtr(2),
-		EffortConfidence:  floatPtr(0.8),
-		Status:            StatusPending,
-		CreatedAt:         now,
+		Source:           SourceBacklog,
+		Title:            "Fix Telegram routing",
+		Tier:             TierTechDebt,
+		BasePriority:     0,
+		GoalAlignment:    0.95,
+		UserPriorityRank: intPtr(3),
+		EffortHours:      floatPtr(2),
+		EffortConfidence: floatPtr(0.8),
+		Status:           StatusPending,
+		CreatedAt:        now,
 	}
 
 	result := ScoreWorkItem(item, now, "")
@@ -99,17 +99,17 @@ func TestWalkthroughItemC(t *testing.T) {
 	now := time.Date(2026, 3, 27, 12, 0, 0, 0, time.UTC)
 
 	item := WorkItem{
-		ID:           "wi-C",
-		Source:       SourceDiscovery,
-		Title:        "LoRa research",
-		Tier:         TierExploratory,
-		BasePriority: 0,
+		ID:            "wi-C",
+		Source:        SourceDiscovery,
+		Title:         "LoRa research",
+		Tier:          TierExploratory,
+		BasePriority:  0,
 		GoalAlignment: 0.6,
-		Feasibility:  floatPtr(0.7),
-		Impact:       floatPtr(0.8),
-		Uniqueness:   floatPtr(0.9),
-		Status:       StatusPending,
-		CreatedAt:    now,
+		Feasibility:   floatPtr(0.7),
+		Impact:        floatPtr(0.8),
+		Uniqueness:    floatPtr(0.9),
+		Status:        StatusPending,
+		CreatedAt:     now,
 	}
 
 	result := ScoreWorkItem(item, now, "")
@@ -131,15 +131,15 @@ func TestWalkthroughItemD(t *testing.T) {
 
 	item := WorkItem{
 		ID:               "wi-D",
-		Source:            SourceRetry,
-		Title:             "Failed HITL build retry",
-		Tier:              TierRetry,
-		BasePriority:      0,
-		GoalAlignment:     0, // 0 → fail-open to 1.0
-		EffortHours:       floatPtr(1),
-		EffortConfidence:  floatPtr(0.9),
-		Status:            StatusPending,
-		CreatedAt:         now,
+		Source:           SourceRetry,
+		Title:            "Failed HITL build retry",
+		Tier:             TierRetry,
+		BasePriority:     0,
+		GoalAlignment:    0, // 0 → fail-open to 1.0
+		EffortHours:      floatPtr(1),
+		EffortConfidence: floatPtr(0.9),
+		Status:           StatusPending,
+		CreatedAt:        now,
 	}
 
 	result := ScoreWorkItem(item, now, "")
@@ -168,19 +168,19 @@ func TestWalkthroughItemE(t *testing.T) {
 	deadline := now.Add(150 * 24 * time.Hour)
 
 	item := WorkItem{
-		ID:           "wi-E",
-		Source:       SourceDiscovery,
-		Title:        "EU AI Act compliance tool",
-		Tier:         TierGoalResearch,
-		BasePriority: 0,
-		Deadline:     &deadline,
-		DeadlineType: "regulatory",
+		ID:            "wi-E",
+		Source:        SourceDiscovery,
+		Title:         "EU AI Act compliance tool",
+		Tier:          TierGoalResearch,
+		BasePriority:  0,
+		Deadline:      &deadline,
+		DeadlineType:  "regulatory",
 		GoalAlignment: 0.85,
-		Feasibility:  floatPtr(0.6),
-		Impact:       floatPtr(0.9),
-		Uniqueness:   floatPtr(0.8),
-		Status:       StatusPending,
-		CreatedAt:    now,
+		Feasibility:   floatPtr(0.6),
+		Impact:        floatPtr(0.9),
+		Uniqueness:    floatPtr(0.8),
+		Status:        StatusPending,
+		CreatedAt:     now,
 	}
 
 	result := ScoreWorkItem(item, now, "")
@@ -223,14 +223,14 @@ func TestWalkthroughRanking(t *testing.T) {
 			Status: StatusPending, CreatedAt: now,
 		},
 		{ // D
-			Tier: TierRetry,
+			Tier:        TierRetry,
 			EffortHours: floatPtr(1), EffortConfidence: floatPtr(0.9),
 			Status: StatusPending, CreatedAt: now,
 		},
 		{ // E
 			Tier: TierGoalResearch, Deadline: &deadlineE, DeadlineType: "regulatory",
 			GoalAlignment: 0.85,
-			Feasibility: floatPtr(0.6), Impact: floatPtr(0.9), Uniqueness: floatPtr(0.8),
+			Feasibility:   floatPtr(0.6), Impact: floatPtr(0.9), Uniqueness: floatPtr(0.8),
 			Status: StatusPending, CreatedAt: now,
 		},
 	}
