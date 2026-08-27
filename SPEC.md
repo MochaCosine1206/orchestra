@@ -1,5 +1,8 @@
 # Claude Orchestra — Technical Specification
-## v0.1 — February 5, 2026
+
+**Status:** current as of 2026-08-27. Originally drafted 2026-02-05 as v0.1 and revised since;
+where this document and the code disagree, the code wins. `README.md` is the user-facing
+reference — this document covers design intent and the reasoning behind it.
 
 ---
 
@@ -210,6 +213,11 @@ done
 
 ## 4. SQLite Schema
 
+> `orchestra init` creates **20 tables**. The core set below is the coordination layer; the
+> evaluation, quality, merge-queue and health tables were added later and are listed at the end
+> of this section. Further tables (`priority_queue`, `work_items`, `run_history`, `token_usage`)
+> are created by the daemon and priority migrations on first use.
+
 ### 4.1 Core Tables
 
 ```sql
@@ -332,6 +340,26 @@ PRAGMA foreign_keys = ON;
 ```
 
 > **Note:** The `ideas`, `loops`, and `loop_steps` tables extend the schema without modifying existing tables. `loop_steps.task_id` bridges Layer 4 loops into the existing Layer 2 task system.
+
+---
+
+### Tables beyond the original core set
+
+Added as the system grew, and created by `orchestra init` today:
+
+| Group | Tables |
+|-------|--------|
+| Conductors | `conductors` |
+| Merge and quality | `merge_queue_entries`, `quality_ratchet`, `ship_decisions` |
+| Evaluation | `eval_runs`, `eval_results`, `eval_scenarios`, `eval_versions` |
+| Health | `stall_scores`, `drift_scores`, `healing_log` |
+| Planning | `plan_cache` |
+
+Created later, on first use of the daemon and priority subsystems: `priority_queue`,
+`priority_history`, `work_items`, `work_item_deps`, `user_priorities`, `daily_reports`,
+`schedules`, `run_history`, `trust_scores`, `daemon_state`, `token_usage`, `decision_queue`,
+`cage_violations`, `conductor_heartbeats`, `escalation_history`, `recovery_attempts`,
+`rate_usage`.
 
 ---
 
@@ -481,59 +509,34 @@ These MCP servers provide the tooling layer (all local, no auth required):
 | `memory` | Cross-session knowledge graph | `npx -y @modelcontextprotocol/server-memory` |
 | `pm` | Process management | `npx pm-mcp` |
 | `filesystem` | Scoped file access | `npx -y @modelcontextprotocol/server-filesystem` |
+| `playwright` | Browser automation for verification | `npx -y @playwright/mcp@0.0.41 --headless` |
 
 ---
 
-## 9. Implementation Phases
+## 9. Implementation Status
 
-### Phase 1: Manual Orchestra (Week 1)
-- CLAUDE.md with orchestrator instructions
-- Subagent definitions for each role
-- Manual git worktree creation
-- Human acts as orchestrator, using subagents for parallel work
+The original phased roadmap (manual orchestration → SQLite coordination → automated spawning →
+TUI → autonomous loops) is complete and has been superseded by work the roadmap never
+anticipated. The system as built comprises 26 internal packages and 224 non-test Go files,
+covered by 2,126 test functions across 163 test files.
 
-### Phase 2: SQLite Coordination (Week 2-3)
-- SQLite schema implementation (core tables + loop/idea tables)
-- Task CRUD operations
-- File locking
-- Agent heartbeat monitoring
-- Status dashboard (CLI-based)
-- Basic idea table CRUD (create, list, update status)
+Subsystems added after the original plan:
 
-### Phase 3: Automated Spawning (complete — 66 tests, 148 total)
-- `claude -p` based agent spawning
-- Process management (spawn, monitor, kill)
-- Log capture and streaming
-- Dead agent recovery
-- Researcher agent integration (headless research sessions)
-
-### Phase 4: Production Hardening (complete — 114 tests, 262 total)
-- Per-role permission profiles (`dontAsk` mode + allow/deny lists)
-- Failure classification library (rate limit, session limit, context exhaustion)
-- Model fallback chain (Opus → Sonnet → Haiku)
-- Post-completion validation (implementer must produce file changes)
-- Session timeout detection and enforcement
-- Spec size guards (truncation + warning)
-- Worktree cleanup lifecycle management
-
-### Phase 5: Smart Orchestration — The Conductor (complete — 80 tests, 342 total)
-- `orchestra.sh` conductor: `go`, `status`, `merge`, `cost` commands
-- Model routing by role (scout→haiku, implementer→sonnet, architect/reviewer→opus)
-- Task-role storage (`role` column on tasks table)
-- Auto-spawn of dependent tasks (monitor Phase 2, gated by `conductor:active` flag)
-- Topological merge ordering (Kahn's algorithm)
-- Conductor shakedown: 3/3 real agent tasks completed ($0.13 estimated)
-
-### Phase 6: Idea Factory
-- Research Loop with knowledge graph output
-- Creativity Loop with divergent/convergent thinking
-- Spec-Building Loop with full task DAG generation
-- Loop chaining (explicit orchestrator-driven)
-- Idea lifecycle management (raw → deployed pipeline)
-- Event-driven loop chaining (automatic chain advancement)
-- Academic API integration for Research loops (arXiv, Semantic Scholar, OpenAlex)
-
----
+| Package | Role |
+|---------|------|
+| `daemon` | Long-running background service: cron schedules, discovery scanning, decision queue |
+| `governor` | Budgets, rate limits, circuit breakers, runaway and no-progress detection |
+| `quality` | Quality gates and ship decisions |
+| `cage` | Hard-limit enforcement — the "cage pattern" |
+| `healthcheck` | Three-layer heartbeat with escalation |
+| `healing` | Build-error diagnosis and automated fixes |
+| `priority` | Priority engine, trust scoring, autonomy levels, goal alignment |
+| `recursion` | Depth guards, immutable paths, agent caps |
+| `sandbox` | Container runtime with network and mount policy |
+| `isolation` | Project locks and shared rate limiting |
+| `bridge` | Telegram approval and AskUserQuestion routing |
+| `github` | GitHub App auth, PR title and description generation |
+| `onboard` | Interactive questionnaire for `orchestra init` |
 
 ## 10. Key Academic Foundations
 
@@ -551,6 +554,11 @@ These MCP servers provide the tooling layer (all local, no auth required):
 ---
 
 ## 11. Success Criteria
+
+> These are **design targets from the original specification, not measured results.** None has
+> been instrumented end-to-end. The `eval` package provides the machinery that would measure the
+> quality-related ones (`orchestra eval run`, `orchestra ab-test`), but no benchmark run is
+> recorded here. Read the table as intent.
 
 | Metric | Target | Phase |
 |---|---|---|

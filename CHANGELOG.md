@@ -4,6 +4,11 @@ All notable changes to Claude Orchestra are documented here. Format follows [Kee
 
 ---
 
+> **No version has been tagged.** There are no git tags and no releases; `0.1.0` below was a
+> milestone marker, not a published artifact. Everything since sits under Unreleased.
+> Identifiers such as `B-289`, `G136` and `L-026` are internal ticket references and have no
+> public tracker.
+
 ## [Unreleased]
 
 ### Added
@@ -14,8 +19,6 @@ All notable changes to Claude Orchestra are documented here. Format follows [Kee
 - Content-aware spec generation — `GenerateSpec()` now produces correct specs for content projects (books, textbooks, courses) in addition to code projects. Prompt rewritten with universal + code-specific + content-specific rule sets; LLM picks the right rules based on the idea text. JSON schema role enum expanded to include editor + illustrator (7 roles). Dual example specs loaded (code: billing-api, content: dev-psychology-book). `@file` expansion added to spec generation via `expandFileReferences()`. Validator error message updated to list all 7 roles. Content example spec (`content-book-spec.yaml`) embedded via `go:embed`. 8 new tests
 - I-061: Structured CLI error handling — `OrchestraError` type with 8 exit codes (0=success, 2=usage, 3=database, 4=git, 5=partial, 6=total, 7=preflight), human-readable and JSON formatters, heuristic recovery suggestions, per-task failure details. `--json` flag added to `go`, `exec`, `auto`, and `merge` commands. `conductor-run` (default detached path) now uses the same rich error infrastructure. Fixes silent exit 0 on merge failures (merge.go bug). 11 new tests
 - Editor subagent role — content quality editing with developmental, consistency, and polish passes. New embedded agent definition (`internal/assets/agents/editor.md`), permission profile (`internal/assets/profiles/editor.json`), `validRoles` updated to 6 roles
-- Research docs 192 (context limits and exhaustion strategies) and 193 (context management deep dive for headless agents)
-- Dev-psychology v3 quality infrastructure: voice validation spec (11 measurable dimensions), editorial rubrics (26 rules across DE/CE/PE phases with recursive edit loop pattern), quality-checks.sh (9 automated gate functions). v3 plan expanded with rendering pipeline (from v11), nested chapter structure, CC image sourcing strategy
 - G119: Global config package (`internal/config/`) — XDG-compliant `~/.config/orchestra/config.json` with `ORCHESTRA_CONFIG` env override. `Load()`/`Save()`/`Path()` API. `orchestra init` onboarding asks for default project directory, persists to global config. `orchestra new` reads `default_project_dir` when `--parent-dir` not explicitly set. 8 new tests (6 config, 2 new_cmd integration)
 
 ### Fixed
@@ -23,9 +26,9 @@ All notable changes to Claude Orchestra are documented here. Format follows [Kee
 - B-288: Content phase gates no longer auto-pass silently. `PhaseGate.Mode` field (`test`/`acceptance`/`none`, default auto-detect) added. When `test_cmd` is empty but acceptance criteria exist, `checkAcceptanceHeuristics()` evaluates them via file-count and glob-pattern checks. Unevaluable criteria auto-pass with a warning
 - B-287: Staging branch now always merged to dev after every phase (not just final). `--start-phase` forks from dev directly since it has all prior work. Conductor deactivation no longer skipped for non-final phases. DB staging branch lookup kept as safety fallback
 - B-286: `orchestra new --idea "@file"` now resolves @file references relative to the invoking CWD, not the new project directory. Pre-expands via `ExpandFileReferencesUnlimited()` (new exported wrapper in goalexpand.go) before passing to GenerateSpec. Previously, `@notes/plan.md` would fail because `notes/` doesn't exist in the freshly-created project
-- G136 follow-up: Gate retry no longer re-decomposes the goal. `RetryFailedTasks` now cleans up stale worktrees/branches and spawns directly (monitor + batch spawn + wait + merge), preventing duplicate tasks and "branch already exists" errors that blocked both book projects for 10+ hours. Defense-in-depth cleanup added to `spawner.Run()` as a safety net
+- G136 follow-up: Gate retry no longer re-decomposes the goal. `RetryFailedTasks` now cleans up stale worktrees/branches and spawns directly (monitor + batch spawn + wait + merge), preventing duplicate tasks and "branch already exists" errors that blocked long-running content pipelines. Defense-in-depth cleanup added to `spawner.Run()` as a safety net
 - G139: Rate-limited agents (`is_error:true` + `subtype:"success"`) no longer misclassified as validation failures. `CheckLogResult` respects `is_error:true`, `DetectRateLimitEvent` extracts exact `resetsAt` epoch from JSONL, global cooldown prevents N agents from each hitting the limit. 8 new tests
-- G138: `correctDecomposerFilePaths()` now runs BEFORE `additional_files` merge — prevents edit reports (e.g., `ch01-dev-edit.md`) from being incorrectly mapped to chapter files by ordinal matcher. Root cause of Phase 5 editor gate failure in v7 textbook run
+- G138: `correctDecomposerFilePaths()` now runs BEFORE `additional_files` merge — prevents edit reports (e.g., `ch01-dev-edit.md`) from being incorrectly mapped to chapter files by ordinal matcher. Root cause of an editor gate failure during a long content run
 - G131 (B-283): Classifier now matches "Prompt is too long" and `prompt_too_long` JSONL error type as `context_exhausted` — previously misclassified as `normal_failure`, bypassing re-decomposition recovery
 - G132 (B-284): Removed "late" progress guard from context exhaustion re-decomposition — agents with 3+ commits were incorrectly denied re-decomposition, falling back to respawn-and-fail-again
 

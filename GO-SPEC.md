@@ -1,5 +1,8 @@
 # GO-SPEC.md — Go Orchestrator Specification
 
+**Status:** current as of 2026-08-27. Where this document and the code disagree, the code wins.
+`README.md` is the user-facing reference; this covers implementation decisions.
+
 ## Overview
 
 Claude Orchestra's orchestration layer is a Go binary providing a Cobra CLI + Bubble Tea TUI. Agents run as `claude -p` subprocess sessions. Migration from bash scripts is complete — all orchestration, spawning, monitoring, and CRUD operations are in Go.
@@ -52,162 +55,80 @@ orchestra (Go binary)
 
 ## Project Structure
 
+26 internal packages. `internal/orchestrator` (76 files) and `internal/cmd` (44 files) are the
+two largest; `internal/agent`, `internal/priority`, `internal/tui` and `internal/dashboard`
+follow.
+
 ```
-cmd/orchestra/
-├── main.go                 — Entry point (~10 lines), delegates to internal/cmd
+cmd/
+├── orchestra/          — CLI entry point
+├── mock-agent/         — Test double for agent spawning
+└── telegram-bridge/    — Approval/notification bridge
 
 internal/
-├── cmd/                    — Cobra CLI (16 subcommands)
-│   ├── root.go             — Root command, persistent flags, subcommand registration
-│   ├── root_test.go        — Skeleton tests (subcommand presence, flags, version)
-│   ├── dashboard.go        — `orchestra dashboard` (full TUI, default)
-│   ├── status.go           — `orchestra status [--json]` (inline/headless)
-│   ├── go_cmd.go           — `orchestra go --goal "..."` (orchestrate)
-│   ├── auto.go             — `orchestra auto --goal "..." --sources ...`
-│   ├── merge.go            — `orchestra merge --test-cmd CMD`
-│   ├── decompose.go        — `orchestra decompose --goal "..."`
-│   ├── audit.go            — `orchestra audit --scope ...`
-│   ├── abtest.go           — `orchestra ab-test --goal "..." --test-cmd CMD`
-│   ├── init_cmd.go         — `orchestra init` (project setup + onboarding)
-│   ├── spawn_cmd.go        — `orchestra spawn run|kill|respawn|batch`
-│   ├── monitor_cmd.go      — `orchestra monitor run-once|start|status`
-│   ├── recover_cmd.go      — `orchestra recover [--merge]` (adopt orphaned sessions)
-│   ├── reset_cmd.go        — `orchestra reset [--force]` (clean state)
-│   ├── reconcile_cmd.go    — `orchestra reconcile [--dry-run] [--skip-llm]`
-│   ├── tokens.go           — `orchestra tokens`
-│   └── version.go          — `orchestra version`
-├── version/
-│   └── version.go          — Version constants (injected via ldflags)
-├── tui/
-│   ├── model.go            — OrchestraModel (root Bubble Tea model)
-│   ├── panels/
-│   │   ├── tasks.go        — Task table (evertras/bubble-table)
-│   │   ├── agents.go       — Agent status list with heartbeat/retry badges
-│   │   ├── log.go          — Log viewer (bubbles/viewport, auto-scroll)
-│   │   └── status_bar.go   — Bottom bar: task/agent/lock counts, session time, help hints
-│   ├── logstream/
-│   │   └── parser.go       — JSONL stream-json parser (typed LogEntry structs)
-│   ├── messages.go         — Custom tea.Msg types
-│   ├── keybindings.go      — Key mapping definitions
-│   └── styles.go           — Lip Gloss theme definitions
-├── db/
-│   ├── connection.go       — SQLite connection (WAL, busy_timeout)
-│   ├── queries.go          — Read queries for TUI + CLI + lenient dep queries
-│   ├── mutations.go        — Write queries (task state, agent, blackboard, locks)
-│   ├── models.go           — Task, Agent, BlackboardEntry structs
-│   └── schema.go           — Table definitions, migrations (go:embed)
-├── agent/
-│   ├── spawner.go          — Agent lifecycle (Run, Launch, Resume, Respawn, Batch)
-│   ├── completion.go       — Post-exit handling (CheckLogResult, SalvageWorktreeChanges)
-│   ├── classifier.go       — Failure classification (rate_limit, session_limit, context_exhausted, normal)
-│   ├── specgen.go          — Task spec generation (replaces spec-gen.sh)
-│   ├── validator.go        — Role-specific output validation
-│   ├── config.go           — Role defaults, model routing, ResolveModel()
-│   ├── process.go          — PID operations, kill with graceful shutdown
-│   ├── budget.go           — Per-agent token budget tracking
-│   ├── checkpoint.go       — Agent checkpoint save/restore
-│   └── repomap.go          — Repository file tree generation for specs
-├── assets/                 — Embedded assets (go:embed)
-│   ├── agents/             — Agent role definitions (.md)
-│   ├── profiles/           — Permission profiles (.json)
-│   └── templates/          — Task spec templates
-├── orchestrator/
-│   ├── conductor.go        — Conductor struct, New(), ClaudeRunner interface
-│   ├── go.go               — Go() orchestration (decompose → spawn → wait → merge → reconcile)
-│   ├── auto.go             — Autonomous multi-cycle mode
-│   ├── decompose.go        — Task decomposition via claude -p
-│   ├── merge.go            — Topological merge ordering (Kahn's algorithm)
-│   ├── review.go           — Review gate management (default, spec-diff, structured JSON modes)
-│   ├── audit.go            — Codebase audit scanning
-│   ├── abtest.go           — A/B test harness (review-test, structured-review, cascade arms)
-│   ├── cascade.go          — Agent cascade: complexity estimation + tier routing (single→iterative→multi-agent)
-│   ├── reconcile.go        — Post-session reconciliation (orphans, alignment, follow-ups)
-│   ├── recover.go          — Orphaned session recovery
-│   ├── clarify.go          — Goal clarification (ambiguity detection, option generation)
-│   ├── goalpreprocess.go   — Goal preprocessing (@file expansion, git validation)
-│   ├── goalexpand.go       — Goal expansion helpers
-│   ├── redecompose.go      — Re-decomposition on context exhaustion
-│   ├── iterative.go        — Session-cycling iterative mode
-│   ├── toposort.go         — Topological sort for dependency ordering
-│   ├── runner.go           — ClaudeRunner interface, ExecRunner, MockRunner, RetryRunner
-│   ├── tokens.go           — Token usage reporting
-│   └── helpers.go          — Shared helpers (activate/deactivate conductor, cleanup)
-├── monitor/
-│   └── monitor.go          — Goroutine supervisor (heartbeats, cascade, lenient deps, auto-merge)
-├── onboard/                — Interactive onboarding (Huh forms)
-├── scaffold/               — Project scaffolding for `orchestra init`
-└── delegate/               — External command delegation
+├── agent/         (25)  Spawning, roles, checkpoints, failure classification, Docker args
+├── assets/         (2)  Embedded agent definitions and templates (go:embed)
+├── bridge/        (16)  Telegram approval + AskUserQuestion routing
+├── cage/           (2)  Hard-limit enforcement (the "cage pattern")
+├── cmd/           (44)  Cobra command definitions
+├── config/         (8)  Global configuration read/write
+├── daemon/        (17)  Background daemon, cron, discovery scanning, decision queue
+├── dashboard/     (21)  Web dashboard, SSE, HITL handlers, artifacts
+├── db/            (14)  SQLite schema, queries, mutations, metrics
+├── delegate/       (2)  External command delegation
+├── eval/           (9)  LLM-as-judge scoring, golden transcripts, A/B harness
+├── github/         (4)  GitHub App auth, PR title/description generation
+├── governor/       (9)  Budgets, rate limits, circuit breakers, runaway detection
+├── healing/       (10)  Build-error diagnosis and automated fixes
+├── healthcheck/    (4)  Three-layer heartbeat and escalation
+├── isolation/      (2)  Project locks and shared rate limiting
+├── monitor/       (10)  Heartbeats, stall scoring, rabbit-hole detection
+├── onboard/        (6)  Interactive questionnaire for `orchestra init`
+├── orchestrator/  (76)  Conductor: decompose, merge, review, auto, ab-test, toposort
+├── priority/      (27)  Priority engine, trust scoring, autonomy, alignment
+├── quality/       (12)  Quality gates and ship decisions
+├── recursion/     (10)  Depth guards, immutable paths, agent caps
+├── sandbox/        (9)  Container runtime, network and mount policy
+├── scaffold/       (4)  Project scaffolding and MCP config
+├── tui/           (23)  Bubble Tea dashboard (panels, log streaming, keybinds)
+└── version/        (4)  Build metadata and Claude version checks
 ```
 
 ## Cobra Command Structure
 
+28 commands (excluding Cobra's generated `help` and `completion`). Those with subcommands are
+marked.
+
 ```
-orchestra                           # Default: launch TUI dashboard
-orchestra dashboard                 # Explicit: launch TUI dashboard
-orchestra go --goal "..."           # Orchestrate a goal (headless by default)
-  --goal "description"              # Required: what to build
-  --test-cmd "cmd"                  # Post-implementation test
-  --iterative                       # Session-cycling mode for large goals
-  --review                          # Enable pre-decompose + pre-merge review gates
-  --headless                        # No TUI (default when piped or in CI)
-  --dry-run                         # Show plan without executing
-  --max-tasks N                     # Cap decomposed task count (default 3)
-  --max-parallel N                  # Max concurrent agents (default 2)
-  --interval N                      # Monitor poll interval in seconds (default 15)
-  --model-strategy S                # Model routing: all-opus, per-role, all-sonnet
-  --base-branch B                   # Base branch for worktrees (default: current)
-  --clarify                         # Enable goal clarification before decompose
-  --clarify-mode M                  # Clarification mode: auto, cli, tui
-  --repo-map                        # Inject repo file tree into agent specs
-  --reconcile                       # Run post-session reconciliation (default true)
-  --lenient-deps                    # Enable lenient dependency cascade mode
-  --cascade                         # Agent cascade: route by complexity tier (single→iterative→multi-agent)
-orchestra auto                      # Autonomous multi-cycle mode
-  --goal "description"              # Optional starting goal
-  --sources audit,markers,gaps      # Work discovery sources
-  --max-cycles N                    # Circuit breaker (default 10)
-orchestra status                    # Show status (inline text or TUI)
-  --json                            # Machine-readable JSON output
-orchestra merge                     # Merge completed branches
-  --test-cmd "cmd"                  # Test gate per branch
-  --review                          # Pre-merge code review
-  --dry-run                         # Show merge plan
-orchestra decompose                 # Decompose goal into tasks
-  --goal "description"              # Required
-  --max-tasks N                     # Cap task count (default 3)
-orchestra audit                     # Scan for issues
-  --scope all|tests|code|gaps       # What to scan
-  --dry-run                         # Report only
-orchestra ab-test                   # Compare multi-agent vs single-agent
-  --goal "description"              # Required
-  --test-cmd "cmd"                  # Required
-  --runs N                          # Repetitions (default 1)
-  --clarify                         # Enable goal clarification for both arms
-  --review-test                     # A/B test spec-anchored review vs default review
-  --structured-review               # A/B test structured JSON review findings
-  --cascade                         # A/B test cascade routing vs default Go()
-orchestra spawn                     # Agent process management
-  orchestra spawn run               # Spawn agent for a task
-  orchestra spawn kill              # Kill a running agent
-  orchestra spawn respawn           # Respawn a failed agent
-  orchestra spawn batch             # Spawn agents for multiple tasks
-orchestra monitor                   # Background supervisor
-  orchestra monitor run-once        # Run one monitor cycle
-  orchestra monitor start           # Start continuous monitoring
-  orchestra monitor status          # Show monitor state
-orchestra reconcile                 # Post-session analysis
-  --dry-run                         # Report only, no side effects
-  --skip-llm                        # Skip LLM goal alignment analysis
-  --session ID                      # Reconcile a specific session
-orchestra recover                   # Recover orphaned sessions
-  --merge                           # Auto-merge after recovery
-orchestra reset                     # Clean state (DB, agents, worktrees, git)
-  --force                           # Skip confirmation
-  # Also kills all agent PIDs and restores git state if behind upstream
-orchestra init                      # Initialize orchestra in a project
-  --clean                           # Clean existing state before init
-orchestra tokens                    # Show token usage summary
-orchestra version                   # Print version
+orchestra
+├── go                  Decompose goal → spawn agents → merge
+├── exec                Execute a multi-phase YAML spec
+├── auto                Autonomous multi-cycle mode
+├── new                 Create a new project from an idea
+├── decompose           Decompose a goal into tasks
+├── generate-spec       Generate a phased YAML spec from an idea
+├── merge               Merge completed branches
+├── dashboard           Launch the TUI dashboard (--web for HTTP)
+├── status              Show orchestra status
+├── tokens              Show token usage
+├── audit               Scan for issues
+├── reconcile           Post-session reconciliation and gap analysis
+├── projects  ›         add · list · remove · scan · show
+├── queue     ›         add · cancel · demote · history · list · promote
+├── spawn     ›         batch · kill · respawn · run
+├── monitor   ›         run-once · start · status
+├── daemon    ›         install · logs · run · start · status · stop · uninstall
+├── heal      ›         history · status
+├── docker    ›         build · token
+├── eval      ›         compare · report · run · scenarios
+├── cache     ›         clear
+├── ab-test             Compare multi-agent vs single-agent
+├── recover             Recover an orphan conductor session
+├── reset               Remove all worktrees and reset the database
+├── release             Run release gate checks and tag a new version
+├── init                Initialize orchestra in a project
+├── doctor              Check environment dependencies
+└── version             Print version information
 ```
 
 ## TUI Layout
@@ -317,22 +238,34 @@ PRAGMA foreign_keys = ON;
 
 ## Distribution
 
-### Homebrew (primary)
+**Nothing is published today.** There are no git tags, no GitHub releases, and no Homebrew tap
+(`Plyne-Technologies/homebrew-tap` does not exist). GoReleaser has never been run. The only
+supported install is building from source:
+
 ```bash
-brew tap plyne-technologies/orchestra
-brew install orchestra
+git clone https://github.com/MochaCosine1206/orchestra.git
+cd orchestra && make build
 ```
 
-### Go install (developers)
-```bash
-go install github.com/Plyne-Technologies/orchestra/cmd/orchestra@latest
-```
+The sections below describe the intended packaging, not the current state.
 
-### GitHub Releases (manual)
+### Homebrew (planned)
+`.goreleaser.yaml` is configured to publish a formula to a `homebrew-tap` repository. Creating
+that repository is a prerequisite; `scaffold-homebrew-tap.sh` exists to do it.
+
+### Go install (works once the repository is public)
+```bash
+go install github.com/MochaCosine1206/orchestra/cmd/orchestra@latest
+```
+With no tags, this resolves to a pseudo-version of the default branch.
+
+### GitHub Releases (planned)
 Pre-built binaries for macOS arm64/amd64 and Linux amd64/arm64 via GoReleaser.
 
-### Binary size target
-~12-15 MB (Go binary + embedded SQLite WASM + embedded templates)
+### Binary size
+**~33.5 MB** as built today (Go binary + embedded SQLite WASM + embedded templates + dashboard
+assets). The original 12–15 MB target in this document was never met and no longer reflects what
+the binary contains.
 
 ## Embedded Assets
 
@@ -354,7 +287,7 @@ All four migration phases are complete. The Go binary is the sole interface — 
 
 ## Testing Strategy
 
-- Go `testing` package with 935 test functions covering all orchestration logic
+- Go `testing` package: **2,126 test functions across 163 test files**, against 224 non-test Go files
 - Mock `claude -p` with test fixtures (MockRunner, RetryRunner)
 - Golden file tests for TUI output (teatest)
 - SQLite queries tested against known database states
@@ -383,7 +316,11 @@ orchestra merge --headless # No interactive prompts
 
 ## Open Questions
 
-1. **Module path:** `github.com/Plyne-Technologies/orchestra` or `github.com/MochaCosine1206/orchestra`? — Currently using `claude-orchestra`
-2. **Minimum Go version:** 1.22+ (for `ncruces/go-sqlite3` WASM support)? — Currently using 1.25
-3. ~~**Bubble Tea v1 vs v2:**~~ Resolved: v1 (stable). See TUI section above.
-4. **When to split repos:** Develop in `cmd/orchestra/` in this repo, split when ready for B-040 distribution?
+1. ~~**Module path**~~ — Resolved: `github.com/MochaCosine1206/orchestra` in this published
+   snapshot; the private working repository uses `github.com/Plyne-Technologies/claude-orchestra`.
+2. ~~**Minimum Go version**~~ — Resolved: `go 1.25.0` in `go.mod`.
+3. ~~**Bubble Tea v1 vs v2**~~ — Resolved: v1 (stable). See TUI section above.
+4. **When to split repos** — Still open. `cmd/orchestra/` lives in this repository; a split has
+   not been needed.
+5. **Packaging** — Still open, and the reason Distribution above describes intent rather than
+   reality. Requires creating the tap repository and cutting a first tag.
