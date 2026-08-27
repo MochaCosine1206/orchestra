@@ -22,3 +22,8 @@ dist/
 node_modules/
 # Rust build output
 src-tauri/target/
+
+# Runtime state — these live in ~/.config/orchestra/, not the repo
+/config.json
+/daemon.json
+/projects.json

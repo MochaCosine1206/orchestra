@@ -1,6 +1,0 @@
-{
-  "interval": "5m",
-  "quiet_hours": null,
-  "max_concurrent": 2,
-  "schedules": []
-}
