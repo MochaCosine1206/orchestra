@@ -35,7 +35,7 @@ func DefaultFeatures() []Feature {
 		},
 		{
 			Name:         "mcp-servers",
-			Description:  "MCP servers (sqlite, memory, git-worktree, pm, filesystem)",
+			Description:  "MCP servers (sqlite, memory, git-worktree, pm, filesystem, playwright)",
 			RequiredDeps: []string{"claude"},
 		},
 		{
@@ -92,13 +92,26 @@ func CheckFeatureAvailability(features []Feature, scan *ScanResult) []featureAva
 }
 
 // SelectNonInteractive returns all features whose dependencies are satisfied.
+// SelectNonInteractive picks every feature whose dependencies are satisfied,
+// except those requiring interactive setup.
+//
+// A feature with a SetupFunc runs a wizard that reads from stdin. In
+// non-interactive mode there is no stdin to read, so enabling it aborts `init`
+// and leaves the project uninitialized. Dependency satisfaction is not a
+// sufficient gate for these: the telegram feature declares only `curl`, which
+// is present nearly everywhere, but its real requirement is a human with a bot
+// token. Features needing setup must be chosen explicitly through the picker.
 func SelectNonInteractive(features []Feature, scan *ScanResult) []Feature {
 	avail := CheckFeatureAvailability(features, scan)
 	var selected []Feature
 	for _, fa := range avail {
-		if fa.Available {
-			selected = append(selected, fa.Feature)
+		if !fa.Available {
+			continue
 		}
+		if fa.Feature.SetupFunc != nil {
+			continue
+		}
+		selected = append(selected, fa.Feature)
 	}
 	return selected
 }

@@ -255,7 +255,7 @@ func printInitSummary(cmd *cobra.Command, repoRoot, dbPath string, result *scaff
 
 	if opts.WriteMCP {
 		if len(result.MCPErrors) == 0 {
-			cmd.Println("  MCP servers:  5 installed (sqlite, memory, git-worktree, pm, filesystem)")
+			cmd.Println("  MCP servers:  6 installed (sqlite, memory, git-worktree, pm, filesystem, playwright)")
 		} else {
 			cmd.Printf("  MCP servers:  %d warnings:\n", len(result.MCPErrors))
 			for _, e := range result.MCPErrors {

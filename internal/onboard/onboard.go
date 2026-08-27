@@ -78,7 +78,7 @@ func Run(projectRoot, defaultName string, detectedType scaffold.ProjectType, exi
 
 			huh.NewConfirm().
 				Title("Install MCP servers?").
-				Description("Installs sqlite, memory, git-worktree, pm, filesystem via claude mcp add").
+				Description("Installs sqlite, memory, git-worktree, pm, filesystem, playwright via claude mcp add").
 				Value(&result.WriteMCP),
 
 			huh.NewConfirm().

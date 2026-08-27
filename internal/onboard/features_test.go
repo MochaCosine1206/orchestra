@@ -102,8 +102,8 @@ func TestNonInteractiveMode(t *testing.T) {
 		names[f.Name] = true
 	}
 
-	// Should include features with satisfied deps
-	for _, want := range []string{"core", "claude-integration", "mcp-servers", "telegram", "loops"} {
+	// Should include features with satisfied deps that need no interactive setup
+	for _, want := range []string{"core", "claude-integration", "mcp-servers", "loops"} {
 		if !names[want] {
 			t.Errorf("non-interactive should include %q", want)
 		}
@@ -112,6 +112,14 @@ func TestNonInteractiveMode(t *testing.T) {
 	// Should exclude docker-sandbox
 	if names["docker-sandbox"] {
 		t.Error("non-interactive should exclude docker-sandbox when docker is missing")
+	}
+
+	// Should exclude telegram even though its only dependency (curl) is present.
+	// Its SetupFunc runs a wizard that reads a bot token from stdin; enabling it
+	// non-interactively aborts `orchestra init` with "token validation: EOF" and
+	// leaves the project uninitialized.
+	if names["telegram"] {
+		t.Error("non-interactive must exclude telegram: its setup wizard requires stdin")
 	}
 }
 
