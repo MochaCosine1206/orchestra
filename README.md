@@ -19,7 +19,7 @@ Build from source:
 ```bash
 git clone https://github.com/MochaCosine1206/orchestra.git
 cd orchestra
-make build          # binary at ./orchestra
+make build          # binary at ./bin/orchestra
 # or install onto your PATH:
 go install ./cmd/orchestra
 ```
@@ -189,6 +189,9 @@ orchestra reset
 ```
 
 ### Known issues from dogfooding
+- **`orchestra init --non-interactive` fails.** It still enters the Telegram setup wizard and
+  aborts on EOF, leaving the project uninitialized. Use plain `orchestra init`, which skips the
+  wizard when no terminal is attached.
 - **Rate limits on Claude Max** — Rare but possible. The RetryRunner handles exponential backoff automatically.
 - **Nested Claude detection** — Claude Code v2.1.41+ detects nested sessions. Orchestra strips the `CLAUDECODE` env var to prevent this.
 - **Long autonomous sessions** — After ~1hr, consider shorter `--max-cycles` to prevent context degradation.

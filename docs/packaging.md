@@ -9,7 +9,7 @@ To install today, build from source:
 ```bash
 git clone https://github.com/MochaCosine1206/orchestra.git
 cd orchestra
-make build          # binary at ./orchestra
+make build          # binary at ./bin/orchestra
 ```
 
 ## What exists
