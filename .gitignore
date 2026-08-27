@@ -12,7 +12,7 @@ specs/
 # No secrets in them (Telegram tokens live in ~/.telegram-notify).
 # Paths use $CLAUDE_PROJECT_DIR (portable).
 # Go build output
-orchestra
+/orchestra
 bin/
 dist/
 # Orchestra scaffolding (user projects)
