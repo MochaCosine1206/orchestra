@@ -242,7 +242,7 @@ PRAGMA foreign_keys = ON;
 ## Distribution
 
 **Nothing is published today.** There are no git tags, no GitHub releases, and no Homebrew tap
-(`Plyne-Technologies/homebrew-tap` does not exist). GoReleaser has never been run. The only
+(`MochaCosine1206/homebrew-tap` does not exist). GoReleaser has never been run. The only
 supported install is building from source:
 
 ```bash
@@ -320,7 +320,7 @@ orchestra merge --headless # No interactive prompts
 ## Open Questions
 
 1. ~~**Module path**~~ — Resolved: `github.com/MochaCosine1206/orchestra` in this published
-   snapshot; the private working repository uses `github.com/Plyne-Technologies/claude-orchestra`.
+   snapshot. The private working repository this was extracted from uses a different module path.
 2. ~~**Minimum Go version**~~ — Resolved: `go 1.25.0` in `go.mod`.
 3. ~~**Bubble Tea v1 vs v2**~~ — Resolved: v1 (stable). See TUI section above.
 4. **When to split repos** — Still open. `cmd/orchestra/` lives in this repository; a split has

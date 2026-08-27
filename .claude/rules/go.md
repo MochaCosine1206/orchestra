@@ -56,4 +56,4 @@ paths:
 ## Releasing
 - Bump `LatestVersion` in `internal/version/version.go` to match the new tag
 - Tag: `git tag vX.Y.Z && git push --tags`
-- Users upgrade: `go install github.com/Plyne-Technologies/claude-orchestra/cmd/orchestra@latest`
+- Users upgrade: `go install github.com/MochaCosine1206/orchestra/cmd/orchestra@latest`

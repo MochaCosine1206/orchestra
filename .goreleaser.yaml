@@ -53,11 +53,11 @@ changelog:
 brews:
   - name: orchestra
     repository:
-      owner: Plyne-Technologies
+      owner: MochaCosine1206
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
     directory: Formula
-    homepage: "https://github.com/Plyne-Technologies/Claude-Orchestra"
+    homepage: "https://github.com/MochaCosine1206/orchestra"
     description: "Multi-agent code orchestration — coordinate parallel Claude Code agents"
     license: "MIT"
     install: |
@@ -67,18 +67,18 @@ brews:
 
 dockers:
   - image_templates:
-      - "ghcr.io/plyne-technologies/orchestra:{{ .Version }}"
-      - "ghcr.io/plyne-technologies/orchestra:latest"
+      - "ghcr.io/mochacosine1206/orchestra:{{ .Version }}"
+      - "ghcr.io/mochacosine1206/orchestra:latest"
     dockerfile: Dockerfile.release
     build_flag_templates:
       - "--label=org.opencontainers.image.title={{ .ProjectName }}"
       - "--label=org.opencontainers.image.version={{ .Version }}"
-      - "--label=org.opencontainers.image.source=https://github.com/Plyne-Technologies/Claude-Orchestra"
+      - "--label=org.opencontainers.image.source=https://github.com/MochaCosine1206/orchestra"
 
 release:
   github:
-    owner: Plyne-Technologies
-    name: Claude-Orchestra
+    owner: MochaCosine1206
+    name: orchestra
   draft: false
   prerelease: auto
   name_template: "Orchestra {{ .Version }}"

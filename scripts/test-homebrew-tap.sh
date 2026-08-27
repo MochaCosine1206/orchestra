@@ -42,10 +42,10 @@ pass "goreleaser is installed"
 echo ""
 echo "--- Tap repository ---"
 if command -v gh &>/dev/null; then
-  if gh repo view Plyne-Technologies/homebrew-tap &>/dev/null; then
-    pass "Plyne-Technologies/homebrew-tap exists on GitHub"
+  if gh repo view MochaCosine1206/homebrew-tap &>/dev/null; then
+    pass "MochaCosine1206/homebrew-tap exists on GitHub"
   else
-    fail "Plyne-Technologies/homebrew-tap not found (or gh not authenticated)"
+    fail "MochaCosine1206/homebrew-tap not found (or gh not authenticated)"
   fi
 else
   echo "  SKIP: gh CLI not installed — cannot verify tap repo"
@@ -76,7 +76,7 @@ echo "--- Test formula ---"
 cat > "$FORMULA_PATH" <<RUBY
 class Orchestra < Formula
   desc "Multi-agent code orchestration — coordinate parallel Claude Code agents"
-  homepage "https://github.com/Plyne-Technologies/Claude-Orchestra"
+  homepage "https://github.com/MochaCosine1206/orchestra"
   license "MIT"
   version "0.0.0-test"
 

@@ -30,9 +30,9 @@ make build          # binary at ./bin/orchestra
 3. Cut a first tag (`orchestra release --dry-run` first — the gate checks are the point).
 4. Run GoReleaser, which builds the binaries, creates the GitHub release, and pushes the formula.
 
-Note that `.goreleaser.yaml` still points at the private working repository
-(`Plyne-Technologies/Claude-Orchestra`) for `homepage` and release owner. Publishing from this
-snapshot would need those updated to match wherever it is published from.
+`.goreleaser.yaml`, `scaffold-homebrew-tap.sh` and `scripts/test-homebrew-tap.sh` all point at
+this repository (`MochaCosine1206/orchestra`) and at a `MochaCosine1206/homebrew-tap` that has
+not been created.
 
 ## Binary size
 

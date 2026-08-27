@@ -12,16 +12,16 @@ func TestParsePrioritiesFile_WithItems(t *testing.T) {
 
 	content := `# My Priorities
 
-> Build the best AI education platform this year
-> Focus on grant-funded work first
+> Ship the v2 platform this quarter
+> Prioritise customer-facing work first
 
 ## Active Priorities
 
-1. Finish HITL v11 homework system — ai-agent-hitl-education-v11
-2. Grant application for UNESCO education AI — Claude-Orchestra
-3. Fix Telegram routing for multi-project — Claude-Orchestra
-4. Research LoRa + local LLM hub opportunities
-5. Enterprise onboarding knowledge management tool -- enterprise-kb
+1. Finish the onboarding flow — web-app
+2. Draft the integration proposal — orchestra
+3. Fix notification routing for multi-project — orchestra
+4. Research local inference options
+5. Knowledge management tool -- internal-kb
 `
 
 	dir := t.TempDir()
@@ -35,7 +35,7 @@ func TestParsePrioritiesFile_WithItems(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if goal != "Build the best AI education platform this year Focus on grant-funded work first" {
+	if goal != "Ship the v2 platform this quarter Prioritise customer-facing work first" {
 		t.Errorf("goal = %q, want preamble text", goal)
 	}
 
@@ -59,11 +59,11 @@ func TestParsePrioritiesFile_WithItems(t *testing.T) {
 		title    string
 		repoHint string
 	}{
-		{0, "Finish HITL v11 homework system", "ai-agent-hitl-education-v11"},
-		{1, "Grant application for UNESCO education AI", "Claude-Orchestra"},
-		{2, "Fix Telegram routing for multi-project", "Claude-Orchestra"},
-		{3, "Research LoRa + local LLM hub opportunities", ""},
-		{4, "Enterprise onboarding knowledge management tool", "enterprise-kb"},
+		{0, "Finish the onboarding flow", "web-app"},
+		{1, "Draft the integration proposal", "orchestra"},
+		{2, "Fix notification routing for multi-project", "orchestra"},
+		{3, "Research local inference options", ""},
+		{4, "Knowledge management tool", "internal-kb"},
 	}
 
 	for _, tt := range tests {
@@ -99,9 +99,9 @@ func TestUserCollector_Collect(t *testing.T) {
 
 ## Active Priorities
 
-1. Build dark factory daemon — Claude-Orchestra
-2. Write grant proposal — Claude-Orchestra
-3. Ship HITL homework module — ai-agent-hitl-education-v11
+1. Build the background daemon — orchestra
+2. Write the design proposal — orchestra
+3. Ship the reporting module — web-app
 `
 
 	dir := t.TempDir()
@@ -144,8 +144,8 @@ func TestUserCollector_Collect(t *testing.T) {
 	}
 
 	// Verify source IDs are slugified
-	if items[0].SourceID != "user-build-dark-factory-daemon" {
-		t.Errorf("items[0].SourceID = %q, want %q", items[0].SourceID, "user-build-dark-factory-daemon")
+	if items[0].SourceID != "user-build-the-background-daemon" {
+		t.Errorf("items[0].SourceID = %q, want %q", items[0].SourceID, "user-build-the-background-daemon")
 	}
 }
 
@@ -156,9 +156,9 @@ func TestSlugify(t *testing.T) {
 		input string
 		want  string
 	}{
-		{"Build dark factory daemon", "build-dark-factory-daemon"},
-		{"Fix Telegram routing for multi-project", "fix-telegram-routing-for-multi-project"},
-		{"LoRa + local LLM hub", "lora-local-llm-hub"},
+		{"Build the background daemon", "build-the-background-daemon"},
+		{"Fix notification routing for multi-project", "fix-notification-routing-for-multi-project"},
+		{"Local + remote LLM hub", "local-remote-llm-hub"},
 		{"", ""},
 	}
 

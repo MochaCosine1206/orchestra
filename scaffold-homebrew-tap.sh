@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 #
-# scaffold-homebrew-tap.sh — Create the Plyne-Technologies/homebrew-tap repo
+# scaffold-homebrew-tap.sh — Create the MochaCosine1206/homebrew-tap repo
 #
 # Idempotent: checks for prerequisites and existing repo before acting.
 # Requires: gh CLI (authenticated), git
 #
 set -euo pipefail
 
-ORG="Plyne-Technologies"
+ORG="MochaCosine1206"
 REPO="homebrew-tap"
 FULL_REPO="${ORG}/${REPO}"
 
@@ -72,7 +72,7 @@ Official [Homebrew](https://brew.sh) tap for tools by Plyne Technologies.
 ## Usage
 
 ```bash
-brew tap plyne-technologies/tap
+brew tap mochacosine1206/tap
 brew install orchestra
 ```
 
@@ -95,7 +95,7 @@ If you run into issues:
 
 ```bash
 brew doctor
-brew untap plyne-technologies/tap && brew tap plyne-technologies/tap
+brew untap mochacosine1206/tap && brew tap mochacosine1206/tap
 brew install orchestra
 ```
 
@@ -103,7 +103,7 @@ brew install orchestra
 
 Formulae in this tap are automatically updated by [GoReleaser](https://goreleaser.com/)
 whenever a new version tag is pushed to the
-[Claude-Orchestra](https://github.com/Plyne-Technologies/Claude-Orchestra) repository.
+[orchestra](https://github.com/MochaCosine1206/orchestra) repository.
 README
   echo "Created README.md."
 fi

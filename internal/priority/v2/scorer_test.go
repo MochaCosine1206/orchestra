@@ -16,7 +16,7 @@ func approxEqual(a, b, tolerance float64) bool {
 }
 
 // TestWalkthroughItemA validates item A from design doc section 12:
-// UNESCO grant, tier 3, 14-day hard deadline, user rank 2, alignment 0.9
+// Grant-sourced item, tier 3, 14-day hard deadline, user rank 2, alignment 0.9
 func TestWalkthroughItemA(t *testing.T) {
 	now := time.Date(2026, 3, 27, 12, 0, 0, 0, time.UTC)
 	deadline := now.Add(14 * 24 * time.Hour)
@@ -24,7 +24,7 @@ func TestWalkthroughItemA(t *testing.T) {
 	item := WorkItem{
 		ID:               "wi-A",
 		Source:           SourceGrant,
-		Title:            "UNESCO grant application",
+		Title:            "Grant application",
 		Tier:             TierGoalImpl,
 		BasePriority:     0,
 		Deadline:         &deadline,
@@ -94,14 +94,14 @@ func TestWalkthroughItemB(t *testing.T) {
 	}
 }
 
-// TestWalkthroughItemC: LoRa research, tier 8, discovery F*I*U scores
+// TestWalkthroughItemC: exploratory research, tier 8, discovery F*I*U scores
 func TestWalkthroughItemC(t *testing.T) {
 	now := time.Date(2026, 3, 27, 12, 0, 0, 0, time.UTC)
 
 	item := WorkItem{
 		ID:            "wi-C",
 		Source:        SourceDiscovery,
-		Title:         "LoRa research",
+		Title:         "Exploratory research",
 		Tier:          TierExploratory,
 		BasePriority:  0,
 		GoalAlignment: 0.6,
@@ -125,14 +125,14 @@ func TestWalkthroughItemC(t *testing.T) {
 	}
 }
 
-// TestWalkthroughItemD: Failed HITL build retry, tier 2, 1h effort
+// TestWalkthroughItemD: failed build retry, tier 2, 1h effort
 func TestWalkthroughItemD(t *testing.T) {
 	now := time.Date(2026, 3, 27, 12, 0, 0, 0, time.UTC)
 
 	item := WorkItem{
 		ID:               "wi-D",
 		Source:           SourceRetry,
-		Title:            "Failed HITL build retry",
+		Title:            "Failed build retry",
 		Tier:             TierRetry,
 		BasePriority:     0,
 		GoalAlignment:    0, // 0 → fail-open to 1.0

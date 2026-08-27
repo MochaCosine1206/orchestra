@@ -152,7 +152,7 @@ which runs GoReleaser to produce Homebrew formula, Docker image, and binaries.`,
 			cmd.Println()
 			cmd.Printf("Released %s\n", ver)
 			cmd.Println("GitHub Action will build and publish artifacts.")
-			cmd.Printf("Monitor: https://github.com/Plyne-Technologies/Claude-Orchestra/actions\n")
+			cmd.Printf("Monitor: https://github.com/MochaCosine1206/orchestra/actions\n")
 
 			// Update LatestVersion in version.go
 			cmd.Printf("\nNote: update internal/version/version.go LatestVersion to %q for staleness checks.\n", ver)
