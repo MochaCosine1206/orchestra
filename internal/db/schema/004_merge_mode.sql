@@ -1,0 +1,5 @@
+-- Migration 004: Merge mode for PR-based merging (B-273)
+-- Adds merge_mode column to conductors table to support --merge-mode pr.
+--
+-- ALTER TABLE ADD COLUMN is not idempotent in SQLite — the migration
+-- function guards against duplicate columns.

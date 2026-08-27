@@ -1,0 +1,7 @@
+{{define "briefing"}}
+{{template "head" .}}
+<div class="briefing-content" hx-get="/api/briefing" hx-trigger="every 10s" hx-target="this" hx-swap="innerHTML">
+  {{template "briefing-fragment" .}}
+</div>
+{{template "foot" .}}
+{{end}}

@@ -1,0 +1,5 @@
+{{define "agent-avatar"}}
+<div class="noto-ring noto-ring--{{.Status}}" data-role="{{.Role}}" data-status="{{.Status}}" style="{{statusRingCSS .Status}}">
+    <img src="{{avatarSrc .Role .Status}}" alt="{{.Role}} agent" class="noto-img" width="40" height="40" loading="lazy">
+</div>
+{{end}}

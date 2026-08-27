@@ -1,0 +1,4 @@
+{{define "nav-status-fragment"}}
+{{if gt .actionCount 0}}<span class="nav-badge">{{.actionCount}}</span>{{end}}
+{{if .lastActivity}}<span class="nav-update">{{.lastActivity}} since last activity</span>{{end}}
+{{end}}

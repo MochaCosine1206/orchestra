@@ -1,0 +1,49 @@
+{{define "hitl-merge"}}
+<div class="modal-overlay open" id="hitl-merge-modal">
+  <div class="modal-card hitl-merge">
+    <div class="modal-header">
+      <h2 class="t-heading-sm">Merge Approval</h2>
+      <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('open')">&times;</button>
+    </div>
+
+    {{if .HasMerge}}
+    <div class="modal-body">
+      <p class="t-body-sm" style="color: var(--dim); margin-bottom: var(--space-md);">
+        Review merge for task <strong>{{.TaskID}}</strong>
+      </p>
+
+      {{if .Summary}}
+      <div class="hitl-section">
+        <h3 class="t-label">Review Summary</h3>
+        <p class="t-body-sm">{{.Summary}}</p>
+      </div>
+      {{end}}
+
+      {{if .Diff}}
+      <div class="hitl-section">
+        <h3 class="t-label">Diff</h3>
+        <pre class="hitl-diff">{{.Diff}}</pre>
+      </div>
+      {{end}}
+    </div>
+
+    <div class="modal-actions">
+      <button class="ctrl primary"
+              hx-post="/api/hitl/merge/{{.TaskID}}"
+              hx-vals='{"action":"approve"}'
+              hx-target="#hitl-merge-modal"
+              hx-swap="outerHTML">Approve Merge</button>
+      <button class="ctrl"
+              hx-post="/api/hitl/merge/{{.TaskID}}"
+              hx-vals='{"action":"reject","notes":"needs changes"}'
+              hx-target="#hitl-merge-modal"
+              hx-swap="outerHTML">Reject</button>
+    </div>
+    {{else}}
+    <div class="modal-body">
+      <p class="t-body-sm" style="color: var(--dim);">No pending merge approval for this task.</p>
+    </div>
+    {{end}}
+  </div>
+</div>
+{{end}}

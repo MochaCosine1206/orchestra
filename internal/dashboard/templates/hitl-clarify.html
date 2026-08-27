@@ -1,0 +1,41 @@
+{{define "hitl-clarify"}}
+<div class="modal-overlay open" id="hitl-clarify-modal">
+  <div class="modal-card hitl-clarify">
+    <div class="modal-header">
+      <h2 class="t-heading-sm">Clarification Needed</h2>
+      <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('open')">&times;</button>
+    </div>
+
+    {{if .HasQuestion}}
+    <div class="modal-body">
+      <p class="hitl-question">{{.Question}}</p>
+
+      <div class="hitl-options" id="clarify-options">
+        {{range .Options}}
+        <button class="hitl-option-btn"
+                onclick="document.getElementById('clarify-response').value=this.textContent; this.closest('.hitl-options').querySelectorAll('.hitl-option-btn').forEach(b=>b.classList.remove('selected')); this.classList.add('selected');">{{.}}</button>
+        {{end}}
+      </div>
+
+      <div class="hitl-other">
+        <label class="t-body-sm" for="clarify-response">Response (or select above):</label>
+        <input type="text" id="clarify-response" name="response" class="hitl-input" placeholder="Type your response...">
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="ctrl primary"
+              hx-post="/api/hitl/clarify/{{.ConductorID}}"
+              hx-include="#clarify-response"
+              hx-vals='js:{"response": document.getElementById("clarify-response").value}'
+              hx-target="#hitl-clarify-modal"
+              hx-swap="outerHTML">Submit</button>
+    </div>
+    {{else}}
+    <div class="modal-body">
+      <p class="t-body-sm" style="color: var(--dim);">No pending clarification for this conductor.</p>
+    </div>
+    {{end}}
+  </div>
+</div>
+{{end}}

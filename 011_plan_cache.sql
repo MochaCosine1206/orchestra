@@ -1,0 +1,3 @@
+-- Migration 011: Plan cache for decomposition plan reuse.
+-- This is a convenience copy; the canonical migration lives at internal/db/schema/011_plan_cache.sql.
+-- See internal/db/schema/011_plan_cache.sql for the full DDL.

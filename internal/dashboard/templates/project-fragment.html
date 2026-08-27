@@ -1,0 +1,101 @@
+{{define "project-fragment"}}
+  <div style="font-family:var(--font-data);font-size:11px;color:var(--muted);margin-bottom:8px;letter-spacing:0.5px">
+    <a href="/" style="color:var(--dim);text-decoration:none">Factory</a> / {{.Name}}
+  </div>
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:18px">
+    <span class="dot {{.DotClass}}" style="width:10px;height:10px;align-self:center;flex-shrink:0"></span>
+    <span style="font-family:var(--font-display);font-size:20px;font-weight:800;letter-spacing:-0.5px">{{.Name}}</span>
+    {{if .Goal}}<span style="font-size:12px;color:var(--dim)">{{.Goal}}</span>{{end}}
+  </div>
+
+  <div class="two-col">
+    <div>
+      <!-- Task List -->
+      <div class="task-panel">
+        <div class="section-title" style="padding:16px 16px 0">Tasks</div>
+        <div style="padding:8px 16px 16px">
+        {{range .Tasks}}
+        <a href="/task/{{.ID}}" class="trow">
+          <div class="ticon {{.StatusClass}}">{{.StatusIcon}}</div>
+          <div class="tid">{{.ShortID}}</div>
+          <div class="trole {{.RoleClass}}">{{.RoleLabel}}</div>
+          <div class="ttitle">{{.Title}}</div>
+          <div class="telapsed">{{.Elapsed}}</div>
+        </a>
+        {{else}}
+        <div style="padding:12px;color:var(--muted);font-size:12px">No tasks</div>
+        {{end}}
+        </div>
+      </div>
+
+      <!-- Decisions -->
+      {{if .Decisions}}
+      <div style="margin-top:14px">
+        <div class="section-title">Decisions</div>
+        {{range .Decisions}}
+        <div class="decision-row">
+          <span class="time">{{.Time}}</span>
+          {{.Text}}
+        </div>
+        {{end}}
+      </div>
+      {{end}}
+    </div>
+
+    <div class="side-panel">
+      <!-- Agents -->
+      <div class="side-card">
+        <div class="section-title">Agents</div>
+        {{range .Agents}}
+        <a href="/agent/{{.ID}}" class="agent-row" style="text-decoration:none;color:inherit">
+          <div class="noto-ring" style="border:2px solid var(--{{.StatusColor}});{{if eq .StatusColor "green"}}box-shadow:0 0 8px rgba(120,220,119,0.2){{end}}">
+            <img src="{{.EmojiFile}}" width="18" height="18" alt="{{.Role}}" class="noto-img">
+          </div>
+          <div style="flex:1">
+            <div class="agent-name">{{.Name}} <span class="agent-role-tag" style="color:var(--{{.RoleColor}})">{{.Role}}</span></div>
+            <div class="agent-act">{{.Activity}}</div>
+          </div>
+          <div class="ctx"><div class="ctx-fill" style="width:{{.CtxPct}}%;background:var(--{{.CtxColor}})"></div></div>
+        </a>
+        {{else}}
+        <div style="padding:8px 0;color:var(--muted);font-size:11px">No agents</div>
+        {{end}}
+      </div>
+
+      <!-- Events -->
+      <div class="side-card">
+        <div class="section-title">Events</div>
+        {{range .Events}}
+        <div class="ev">
+          <span class="ev-time">{{.TimeAgo}}</span>
+          <div class="ev-dot" style="background:var(--{{.Color}})"></div>
+          <span>{{.Text}}</span>
+        </div>
+        {{else}}
+        <div style="padding:8px 0;color:var(--muted);font-size:11px">No events</div>
+        {{end}}
+      </div>
+
+      <!-- Session Info -->
+      <div class="side-card">
+        <div class="section-title">Session</div>
+        <div class="session-info">
+          Phase: <b>{{.Phase}}</b><br>
+          Elapsed: <b>{{.Elapsed}}</b><br>
+          Tasks: <b>{{.TasksDone}}/{{.TasksTotal}}</b><br>
+          Status: <b>{{.Status}}</b>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls Bar -->
+  <div class="controls-bar" style="margin-top:20px">
+    <button hx-post="/api/project/{{.ID}}/retry" hx-swap="none" class="ctrl primary">Retry Failed</button>
+    <button hx-post="/api/project/{{.ID}}/pause" hx-swap="none" class="ctrl">Pause</button>
+    <button hx-post="/api/project/{{.ID}}/resume" hx-swap="none" class="ctrl">Resume</button>
+    <button hx-post="/api/project/{{.ID}}/replan" hx-swap="none" class="ctrl">Replan</button>
+    <div class="controls-spacer"></div>
+    <button hx-post="/api/project/{{.ID}}/stop" hx-swap="none" class="ctrl danger">Stop Session</button>
+  </div>
+{{end}}

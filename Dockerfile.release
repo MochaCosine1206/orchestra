@@ -1,0 +1,6 @@
+# Minimal release image for orchestra CLI
+# Used by GoReleaser to build ghcr.io/plyne-technologies/orchestra
+FROM alpine:3.20
+RUN apk add --no-cache git ca-certificates sqlite
+COPY orchestra /usr/local/bin/orchestra
+ENTRYPOINT ["orchestra"]

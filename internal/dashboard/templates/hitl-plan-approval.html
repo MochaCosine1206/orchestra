@@ -1,0 +1,46 @@
+{{define "hitl-plan-approval"}}
+<div class="modal-overlay open" id="hitl-plan-modal">
+  <div class="modal-card hitl-plan">
+    <div class="modal-header">
+      <h2 class="t-heading-sm">Plan Approval</h2>
+      <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('open')">&times;</button>
+    </div>
+
+    {{if .HasPlan}}
+    <div class="modal-body">
+      <p class="t-body-sm" style="color: var(--dim); margin-bottom: var(--space-md);">
+        Review the decomposed tasks for conductor <strong>{{.ConductorID}}</strong>
+      </p>
+
+      <div class="hitl-task-list">
+        {{range .Tasks}}
+        <div class="hitl-task-item">
+          <div class="hitl-task-title">{{index . "title"}}</div>
+          {{if index . "role"}}<span class="role-badge">{{index . "role"}}</span>{{end}}
+          {{if index . "files_owned"}}<div class="hitl-task-files t-body-sm" style="color: var(--dim);">Files: {{index . "files_owned"}}</div>{{end}}
+          {{if index . "acceptance_criteria"}}<div class="hitl-task-ac t-body-sm">AC: {{index . "acceptance_criteria"}}</div>{{end}}
+        </div>
+        {{end}}
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="ctrl primary"
+              hx-post="/api/hitl/plan/{{.ConductorID}}"
+              hx-vals='{"action":"approve"}'
+              hx-target="#hitl-plan-modal"
+              hx-swap="outerHTML">Approve</button>
+      <button class="ctrl"
+              hx-post="/api/hitl/plan/{{.ConductorID}}"
+              hx-vals='{"action":"reject","notes":"needs revision"}'
+              hx-target="#hitl-plan-modal"
+              hx-swap="outerHTML">Reject</button>
+    </div>
+    {{else}}
+    <div class="modal-body">
+      <p class="t-body-sm" style="color: var(--dim);">No pending plan approval for this conductor.</p>
+    </div>
+    {{end}}
+  </div>
+</div>
+{{end}}

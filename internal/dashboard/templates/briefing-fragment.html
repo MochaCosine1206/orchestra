@@ -1,0 +1,62 @@
+{{define "briefing-fragment"}}
+  <h1 class="page-title">Briefing</h1>
+
+  {{- /* Factory-wide summary at top */ -}}
+  <div class="update-summary">
+    <div class="section-title">What changed</div>
+    <div class="t-body-sm" style="color: var(--dim); margin-top: var(--space-xs);">Since your last visit</div>
+    <div class="t-body-lg" style="margin-top: var(--space-sm);">
+      {{.totalDone}} tasks completed, {{.totalFailed}} failed across {{len .conductors}} projects
+    </div>
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="stat-val">{{.totalDone}}</div>
+        <div class="stat-label">Completed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">{{.totalFailed}}</div>
+        <div class="stat-label">Failed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">{{len .conductors}}</div>
+        <div class="stat-label">Projects</div>
+      </div>
+    </div>
+  </div>
+
+  {{- /* Per-project update cards */ -}}
+  {{if .cards}}
+  {{range .cards}}
+  <div class="update-card uc-{{.Status}}" style="border-left: 3px solid {{if gt .TasksFailed 0}}var(--orange){{else if gt .TasksDone 0}}var(--green){{else}}var(--dim){{end}};">
+    <div class="uc-header">
+      <span class="uc-dot" style="background: {{if eq .Status "done"}}var(--green){{else if eq .Status "failed"}}var(--red){{else if eq .Status "active"}}var(--blue){{else}}var(--dim){{end}};"></span>
+      <div class="uc-name">{{.Name}}</div>
+    </div>
+    <div class="uc-detail">
+      <span class="font-data">{{.TasksDone}} done{{if gt .TasksFailed 0}} / <span style="color: var(--red);">{{.TasksFailed}} failed</span>{{end}}</span>
+      <span> &middot; {{.AgentCount}} agents</span>
+    </div>
+    {{if .ActionItems}}
+    <div class="uc-actions">
+      {{range .ActionItems}}
+      <div class="uc-action">&#x26A0; {{.}}</div>
+      {{end}}
+    </div>
+    {{end}}
+    {{if .Events}}
+    <div style="margin-top: var(--space-sm);">
+      {{range .Events}}
+      <div class="event-row">
+        <span class="event-time">{{.TimeAgo}}</span>
+        <span class="event-dot" style="background: {{.DotColor}}"></span>
+        <span class="event-text">{{.Text}}{{if gt .Count 1}} <span class="event-count">&times;{{.Count}}</span>{{end}}</span>
+      </div>
+      {{end}}
+    </div>
+    {{end}}
+  </div>
+  {{end}}
+  {{else}}
+  <p class="t-body-sm" style="color: var(--dim);">No conductor activity to report.</p>
+  {{end}}
+{{end}}

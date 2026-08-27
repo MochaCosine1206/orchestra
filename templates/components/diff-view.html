@@ -1,0 +1,19 @@
+{{define "diff-view"}}
+<div style="max-height: 500px; overflow-y: auto; border-radius: var(--radius-sm); background: var(--surface-low); font-family: var(--font-data); font-size: 12px; line-height: 1.6;">
+    {{range .Files}}
+    <!-- File header -->
+    <div style="background: var(--surface-high); padding: var(--space-xs) var(--space-md); position: sticky; top: 0;">
+        <span class="t-data-value">{{.Path}}</span>
+    </div>
+    <!-- Diff lines -->
+    {{range .Lines}}
+    <div style="display: flex; padding: 0 var(--space-md); {{if eq .Type "add"}}background: rgba(var(--green-rgb, 120, 220, 119), 0.08);{{else if eq .Type "del"}}background: rgba(var(--red-rgb, 255, 180, 171), 0.08);{{end}}">
+        <span style="color: var(--muted); min-width: 40px; text-align: right; padding-right: var(--space-sm); user-select: none; flex-shrink: 0;">{{.OldNum}}</span>
+        <span style="color: var(--muted); min-width: 40px; text-align: right; padding-right: var(--space-sm); user-select: none; flex-shrink: 0;">{{.NewNum}}</span>
+        <span style="color: var(--muted); width: 16px; text-align: center; flex-shrink: 0;">{{if eq .Type "add"}}+{{else if eq .Type "del"}}-{{else}} {{end}}</span>
+        <code style="flex: 1; white-space: pre; overflow-x: auto;">{{.Content}}</code>
+    </div>
+    {{end}}
+    {{end}}
+</div>
+{{end}}

@@ -1,0 +1,32 @@
+{{define "hitl-priority"}}
+<div class="modal-overlay open" id="hitl-priority-modal">
+  <div class="modal-card hitl-priority">
+    <div class="modal-header">
+      <h2 class="t-heading-sm">Priority Override</h2>
+      <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('open')">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <p class="t-body-sm" style="color: var(--dim); margin-bottom: var(--space-md);">
+        Drag tasks to reorder priority for conductor <strong>{{.ConductorID}}</strong>
+      </p>
+
+      <div class="hitl-priority-list" id="priority-sortable">
+        {{range .Tasks}}
+        <div class="hitl-priority-item" draggable="true" data-task-id="{{.ID}}">
+          <span class="drag-handle">&#9776;</span>
+          <span class="t-body">{{.Title}}</span>
+          <span class="role-badge">{{.Role}}</span>
+          <span class="dot {{if eq .Status "done"}}completed{{else if eq .Status "failed"}}failed{{else}}running{{end}}"></span>
+        </div>
+        {{end}}
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="ctrl primary" id="save-priority"
+              onclick="savePriorityOrder('{{.ConductorID}}')">Save Order</button>
+    </div>
+  </div>
+</div>
+{{end}}

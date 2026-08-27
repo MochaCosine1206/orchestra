@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "A/B Test Result",
+  "description": "Result of a single A/B test comparing multi-agent orchestra vs single agent",
+  "type": "object",
+  "required": ["timestamp", "goal", "test_cmd", "arm_a", "arm_b", "comparison"],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of when the test was run"
+    },
+    "goal": {
+      "type": "string",
+      "description": "The goal description given to both arms"
+    },
+    "test_cmd": {
+      "type": "string",
+      "description": "The verification command used to judge pass/fail"
+    },
+    "git_base": {
+      "type": "string",
+      "description": "Git commit SHA of main branch at test start"
+    },
+    "arm_a": {
+      "type": "object",
+      "description": "Multi-agent orchestra arm",
+      "required": ["mode", "passed", "wall_clock_s", "total_input_tokens", "total_output_tokens"],
+      "properties": {
+        "mode": { "const": "multi-agent" },
+        "passed": { "type": "boolean" },
+        "wall_clock_s": { "type": "integer" },
+        "total_input_tokens": { "type": "integer" },
+        "total_output_tokens": { "type": "integer" },
+        "files_changed": { "type": "integer" },
+        "commits": { "type": "integer" },
+        "task_count": { "type": "integer" },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "role": { "type": "string" },
+              "status": { "type": "string" },
+              "input_tokens": { "type": "integer" },
+              "output_tokens": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "arm_b": {
+      "type": "object",
+      "description": "Single-agent arm",
+      "required": ["mode", "passed", "wall_clock_s", "total_input_tokens", "total_output_tokens"],
+      "properties": {
+        "mode": { "const": "single-agent" },
+        "passed": { "type": "boolean" },
+        "wall_clock_s": { "type": "integer" },
+        "total_input_tokens": { "type": "integer" },
+        "total_output_tokens": { "type": "integer" },
+        "files_changed": { "type": "integer" },
+        "commits": { "type": "integer" }
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "description": "Derived comparison metrics",
+      "properties": {
+        "winner": { "type": "string", "enum": ["arm_a", "arm_b", "tie", "both_failed"] },
+        "token_ratio": { "type": "number", "description": "arm_a total tokens / arm_b total tokens" },
+        "time_ratio": { "type": "number", "description": "arm_a wall clock / arm_b wall clock" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

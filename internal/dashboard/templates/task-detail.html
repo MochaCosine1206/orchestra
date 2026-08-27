@@ -1,0 +1,67 @@
+{{define "task-detail"}}
+{{template "head" .}}
+<div class="pad">
+  <div style="font-family:var(--font-data);font-size:11px;color:var(--muted);margin-bottom:8px;letter-spacing:0.5px">
+    <a href="/" style="color:var(--dim);text-decoration:none">Factory</a> / Task
+  </div>
+
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+    <div class="ticon {{.StatusClass}}" style="width:16px;height:16px;font-size:9px">{{if eq .StatusClass "done"}}&#10003;{{else if eq .StatusClass "running"}}&#9679;{{else if eq .StatusClass "failed"}}&#10007;{{else}}&#9675;{{end}}</div>
+    <span style="font-family:var(--font-display);font-size:20px;font-weight:800;letter-spacing:-0.5px">{{.Title}}</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+    <span class="meta-pill">{{.Status}}</span>
+    <span class="trole {{.RoleClass}}">{{.RoleLabel}}</span>
+    {{if .Elapsed}}<span style="font-family:var(--font-data);font-size:10px;color:var(--dim)">{{.Elapsed}}</span>{{end}}
+    {{if .Branch}}<span style="font-family:var(--font-data);font-size:10px;color:var(--muted)">{{.Branch}}</span>{{end}}
+  </div>
+
+  <div class="two-col">
+    <div>
+      {{if .DescriptionHTML}}
+      <div class="side-card">
+        <div class="section-title">Description</div>
+        <div style="font-size:12px;color:var(--dim);line-height:1.7">{{safeHTML .DescriptionHTML}}</div>
+      </div>
+      {{end}}
+
+      {{if .AcceptanceCriteriaItems}}
+      <div class="side-card" style="margin-top:14px">
+        <div class="section-title">Acceptance Criteria</div>
+        <div style="font-size:12px;color:var(--dim);line-height:1.8">
+          {{range .AcceptanceCriteriaItems}}
+          <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0">
+            <span style="color:var(--muted)">{{if .Done}}&#10003;{{else}}&#9675;{{end}}</span>
+            <span>{{.Text}}</span>
+          </div>
+          {{end}}
+        </div>
+      </div>
+      {{end}}
+
+      {{if .Result}}
+      <div class="side-card" style="margin-top:14px">
+        <div class="section-title">Result</div>
+        <div style="font-size:12px;color:var(--dim);line-height:1.7">{{safeHTML .ResultHTML}}</div>
+      </div>
+      {{end}}
+    </div>
+
+    <div class="side-panel">
+      <div class="side-card">
+        <div class="section-title">Task Info</div>
+        <div class="session-info">
+          ID: <b>{{.ID}}</b><br>
+          Status: <b>{{.Status}}</b><br>
+          Role: <b>{{.RoleLabel}}</b><br>
+          {{if .AssignedTo}}Agent: <b><a href="/agent/{{.AssignedTo}}" style="color:var(--accent);text-decoration:none">{{.AssignedTo}}</a></b><br>{{end}}
+          {{if .Branch}}Branch: <b>{{.Branch}}</b><br>{{end}}
+          {{if .DependsOn}}Depends: <b>{{.DependsOn}}</b><br>{{end}}
+          {{if .Elapsed}}Elapsed: <b>{{.Elapsed}}</b>{{end}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{template "foot" .}}
+{{end}}

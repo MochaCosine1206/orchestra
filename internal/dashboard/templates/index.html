@@ -1,0 +1,10 @@
+{{define "index"}}
+{{template "head" .}}
+<div class="factory-content" hx-get="/api/factory" hx-trigger="every 2s" hx-target="this" hx-swap="innerHTML">
+  {{template "factory-fragment" .}}
+</div>
+<div class="factory-actions">
+  <button hx-post="/api/factory/pause-all" hx-swap="none" class="ctrl-btn danger">Pause All</button>
+</div>
+{{template "foot" .}}
+{{end}}

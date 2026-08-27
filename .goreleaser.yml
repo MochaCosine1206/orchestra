@@ -1,0 +1,48 @@
+version: 2
+
+builds:
+  - main: ./cmd/orchestra
+    binary: orchestra
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X github.com/MochaCosine1206/orchestra/internal/version.Version={{.Version}}
+      - -X github.com/MochaCosine1206/orchestra/internal/version.Commit={{.ShortCommit}}
+      - -X github.com/MochaCosine1206/orchestra/internal/version.Date={{.Date}}
+
+archives:
+  - format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: checksums.txt
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+brews:
+  - repository:
+      owner: Plyne-Technologies
+      name: homebrew-tap
+    homepage: https://github.com/MochaCosine1206/orchestra
+    description: "Multi-agent orchestration for Claude Code"
+    license: MIT
+    install: |
+      bin.install "orchestra"
+    test: |
+      system "#{bin}/orchestra", "version"

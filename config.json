@@ -1,0 +1,7 @@
+{
+  "default_project_dir": "",
+  "max_tasks": 3,
+  "max_files_per_task": 15,
+  "model_strategy": "opus",
+  "review_enabled": true
+}

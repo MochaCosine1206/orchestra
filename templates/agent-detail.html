@@ -1,0 +1,99 @@
+{{define "agent-detail"}}
+<div class="slide-panel open" id="agent-detail-panel"
+     hx-on:keydown="if(event.key==='Escape') this.classList.remove('open')">
+    <div class="panel-header">
+        <div style="display: flex; align-items: center; gap: var(--space-md);">
+            <div class="noto-ring ring-{{.RingState}}" style="width: 48px; height: 48px;">
+                <img class="agent-avatar-img" src="/static/emoji/agent.webp" alt="">
+            </div>
+            <div>
+                <span class="t-display-sm">{{.Role}}</span>
+                <span class="agent-status-badge status-{{.Status}}">{{.Status}}</span>
+            </div>
+        </div>
+        <button class="btn-icon" hx-on:click="document.getElementById('agent-detail-panel').classList.remove('open')">&times;</button>
+    </div>
+
+    <div class="panel-body">
+        <!-- Agent ID -->
+        <div style="margin-bottom: var(--space-lg);">
+            <span class="meta-pill"><span class="label">Agent</span> {{.Name}}</span>
+        </div>
+
+        <!-- Context Usage Gauge -->
+        <div class="section-title">Context Usage</div>
+        <div style="margin-bottom: var(--space-lg);">
+            <div class="ctx-bar" style="height: 8px; width: 100%;">
+                <div class="context-gauge-fill {{if le .ContextPercent 50}}ctx-green{{else if le .ContextPercent 75}}ctx-yellow{{else if le .ContextPercent 90}}ctx-orange{{else}}ctx-red{{end}}" style="width: {{.ContextPercent}}%;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: var(--space-xs);">
+                <span class="t-body-xs" style="color: var(--dim);">{{.ContextPercent}}%</span>
+                <span class="t-body-xs" style="color: var(--muted);">{{.TokenCount}} tokens</span>
+            </div>
+        </div>
+
+        <!-- Heartbeat -->
+        <div class="section-title">Heartbeat</div>
+        <div style="margin-bottom: var(--space-lg);">
+            <span class="t-body-md" style="color: var(--dim);">{{.HeartbeatAgo}}</span>
+        </div>
+
+        <!-- Current Task -->
+        {{if .CurrentTask}}
+        <div class="section-title">Current Task</div>
+        <div style="margin-bottom: var(--space-lg);">
+            <a href="/task/{{.CurrentTask.ID}}" style="color: var(--accent); text-decoration: none;">
+                <span class="t-data-value">{{.CurrentTask.ID}}</span>
+                <span class="t-body-md" style="margin-left: var(--space-sm);">{{.CurrentTask.Title}}</span>
+            </a>
+        </div>
+        {{end}}
+
+        <!-- Log Stream -->
+        {{if .LogEntries}}
+        <div class="section-title">Log Stream</div>
+        <div style="max-height: 400px; overflow-y: auto; background: var(--surface-low); border-radius: var(--radius-sm); padding: var(--space-sm); margin-bottom: var(--space-lg); font-family: var(--font-data); font-size: 12px;">
+            {{range .LogEntries}}
+            <div style="padding: var(--space-xs) var(--space-sm); border-left: 3px solid {{if eq .Kind "tool_call"}}var(--blue){{else if eq .Kind "error"}}var(--red){{else if eq .Kind "result"}}transparent{{else}}transparent{{end}}; {{if eq .Kind "result"}}background: rgba(120, 220, 119, 0.08);{{end}} margin-bottom: 2px; border-radius: var(--radius-xs);">
+                <div style="display: flex; align-items: flex-start; gap: var(--space-sm);">
+                    <span style="color: var(--muted); flex-shrink: 0;">
+                        {{if eq .Kind "tool_call"}}&#x1F527;{{else if eq .Kind "error"}}&#x26A0;{{else if eq .Kind "result"}}&#x2705;{{else}}&#x1F4DD;{{end}}
+                    </span>
+                    <div style="flex: 1; min-width: 0;">
+                        <div class="log-entry-content {{if .Expandable}}log-collapsed{{end}}" onclick="this.classList.toggle('log-collapsed'); this.classList.toggle('log-expanded');">
+                            {{.Content}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{end}}
+        </div>
+        {{end}}
+
+        <!-- Tool Call History -->
+        {{if .ToolCalls}}
+        <div class="section-title">Tool Call History</div>
+        <div style="margin-bottom: var(--space-lg);">
+            {{range .ToolCalls}}
+            <div class="ghost-border" style="padding: var(--space-sm) var(--space-md); margin-bottom: var(--space-xs); border-radius: var(--radius-sm);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="t-data-value" style="color: var(--blue);">{{.Name}}</span>
+                    <span class="t-body-xs" style="color: var(--muted);">{{.Timestamp}}</span>
+                </div>
+                {{if .Input}}
+                <div class="t-body-xs" style="color: var(--dim); margin-top: var(--space-xs); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    {{.Input}}
+                </div>
+                {{end}}
+                {{if .Output}}
+                <div class="t-body-xs" style="color: var(--muted); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    {{.Output}}
+                </div>
+                {{end}}
+            </div>
+            {{end}}
+        </div>
+        {{end}}
+    </div>
+</div>
+{{end}}

@@ -1,0 +1,58 @@
+{{define "hitl-failure"}}
+<div class="modal-overlay open" id="hitl-failure-modal">
+  <div class="modal-card hitl-failure">
+    <div class="modal-header">
+      <h2 class="t-heading-sm">Failure Triage</h2>
+      <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('open')">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="hitl-section">
+        <h3 class="t-label">Task</h3>
+        <p class="t-body">{{.TaskTitle}}</p>
+        <span class="dot failed"></span> <span class="t-body-sm">{{.Status}}</span>
+      </div>
+
+      {{if .Classification}}
+      <div class="hitl-section">
+        <h3 class="t-label">Classification</h3>
+        <span class="role-badge">{{.Classification}}</span>
+      </div>
+      {{end}}
+
+      {{if .RetryCount}}
+      <div class="hitl-section">
+        <h3 class="t-label">Retry Count</h3>
+        <p class="t-body-sm">{{.RetryCount}} attempts</p>
+      </div>
+      {{end}}
+
+      {{if .ErrorMessage}}
+      <div class="hitl-section">
+        <h3 class="t-label">Error</h3>
+        <pre class="hitl-error">{{.ErrorMessage}}</pre>
+      </div>
+      {{end}}
+    </div>
+
+    <div class="modal-actions">
+      <button class="ctrl primary"
+              hx-post="/api/hitl/failure/{{.TaskID}}"
+              hx-vals='{"action":"retry"}'
+              hx-target="#hitl-failure-modal"
+              hx-swap="outerHTML">Retry</button>
+      <button class="ctrl"
+              hx-post="/api/hitl/failure/{{.TaskID}}"
+              hx-vals='{"action":"skip"}'
+              hx-target="#hitl-failure-modal"
+              hx-swap="outerHTML">Skip</button>
+      <button class="ctrl"
+              hx-post="/api/hitl/failure/{{.TaskID}}"
+              hx-vals='{"action":"replan"}'
+              hx-target="#hitl-failure-modal"
+              hx-swap="outerHTML">Replan</button>
+      <a href="/task/{{.TaskID}}" class="ctrl">View Log</a>
+    </div>
+  </div>
+</div>
+{{end}}

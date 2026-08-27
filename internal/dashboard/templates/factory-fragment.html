@@ -1,0 +1,54 @@
+{{define "factory-fragment"}}
+{{- /* Alert banner for items needing human action */ -}}
+{{if .alerts}}
+<div class="alert-area">
+  {{range .alerts}}
+  <div class="alert alert-red">
+    <span class="alert-dot"></span>
+    <span class="alert-msg">{{.Message}}</span>
+    {{if .TaskID}}<button class="ctrl-btn" hx-post="/api/project/{{.ProjectID}}/retry/{{.TaskID}}" hx-swap="none">Retry</button>{{end}}
+    <button class="alert-dismiss" onclick="this.parentElement.remove()">&times;</button>
+  </div>
+  {{end}}
+</div>
+{{end}}
+
+{{- /* Stat grid: 4 cards */ -}}
+<div class="stat-grid">
+  <div class="stat">
+    <div class="stat-label">Active Projects</div>
+    <div class="stat-val">{{.activeConductors}}</div>
+    <div class="stat-sub">{{.activeConductors}} running, {{.idleConductors}} idle</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Agents</div>
+    <div class="stat-val">{{.totalAgents}}</div>
+    <div class="stat-sub">{{.workingAgents}} working, {{.idleAgents}} idle</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Tasks Today</div>
+    <div class="stat-val">{{.totalTasks}}</div>
+    <div class="stat-sub">{{.tasksDone}} done, {{.tasksRunning}} running, {{.tasksFailed}} failed</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Success Rate</div>
+    <div class="stat-val">{{.successRate}}</div>
+    <div class="stat-sub">last 7 days{{if gt .totalTasks 0}}{{if not (gt .totalTasks 19)}} (small sample){{end}}{{end}}</div>
+  </div>
+</div>
+
+{{- /* Projects list (single-column; events belong on project view only) */ -}}
+<div class="section-title">Projects</div>
+<div class="proj-list">
+  {{range .projects}}
+  <a href="/project/{{.ID}}" class="proj-row">
+    <span class="dot {{.DotClass}}"></span>
+    <div class="pname">{{.Name}}</div>
+    <div class="pgoal">{{.Goal}}</div>
+    <div class="pmetrics">Tasks <b>{{.TasksDone}}/{{.TasksTotal}}</b> &middot; Agents <b>{{.AgentCount}}</b> &middot; {{.Elapsed}}</div>
+  </a>
+  {{else}}
+  <p class="t-body-sm" style="color: var(--dim); padding: var(--space-md);">No active projects. Run <code>orchestra go</code> to start.</p>
+  {{end}}
+</div>
+{{end}}

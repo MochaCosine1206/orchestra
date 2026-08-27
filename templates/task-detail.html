@@ -1,0 +1,122 @@
+{{define "task-detail"}}
+<div class="slide-panel open" id="task-detail-panel"
+     hx-on:keydown="if(event.key==='Escape') this.classList.remove('open')">
+    <div class="panel-header">
+        <div style="display: flex; align-items: center; gap: var(--space-sm);">
+            <span class="ticon {{.Status}}">{{if eq .Status "done"}}&#x2705;{{else if eq .Status "running"}}&#x1F7E2;{{else if eq .Status "failed"}}&#x1F534;{{else if eq .Status "pending"}}&#x26AA;{{else}}&#x1F7E1;{{end}}</span>
+            <span class="t-display-sm">{{.Title}}</span>
+            <span class="role-badge role-{{.Role}}">{{.Role}}</span>
+        </div>
+        <button class="btn-icon" hx-on:click="document.getElementById('task-detail-panel').classList.remove('open')">&times;</button>
+    </div>
+
+    <div class="panel-body">
+        <!-- Task ID and Priority -->
+        <div style="display: flex; gap: var(--space-sm); margin-bottom: var(--space-lg);">
+            <span class="meta-pill"><span class="label">ID</span> {{.ID}}</span>
+            <span class="meta-pill"><span class="label">Priority</span> {{.Priority}}</span>
+            <span class="meta-pill"><span class="label">Elapsed</span> {{.Elapsed}}</span>
+        </div>
+
+        <!-- Description -->
+        <div class="section-title">Description</div>
+        <div class="t-body-md" style="color: var(--dim); margin-bottom: var(--space-lg);">
+            {{.Description}}
+        </div>
+
+        <!-- Acceptance Criteria -->
+        {{if .AcceptanceCriteria}}
+        <div class="section-title">Acceptance Criteria</div>
+        <div style="margin-bottom: var(--space-lg);">
+            {{range .AcceptanceCriteria}}
+            <div style="display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-xs) 0;">
+                {{if .Passed}}
+                <span style="color: var(--green);">&#x2705;</span>
+                {{else}}
+                <span style="color: var(--muted);">&#x26AA;</span>
+                {{end}}
+                <span class="t-body-sm" style="color: var(--dim);">{{.Text}}</span>
+            </div>
+            {{end}}
+        </div>
+        {{end}}
+
+        <!-- Dependencies -->
+        {{if or .DependsOn .BlockedBy}}
+        <div class="section-title">Dependencies</div>
+        <div style="display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-bottom: var(--space-lg);">
+            {{range .DependsOn}}
+            <a href="/task/{{.}}" class="meta-pill" style="color: var(--accent); cursor: pointer;">
+                <span class="label">depends on</span> {{.}}
+            </a>
+            {{end}}
+            {{range .BlockedBy}}
+            <a href="/task/{{.}}" class="meta-pill" style="color: var(--orange); cursor: pointer;">
+                <span class="label">blocked by</span> {{.}}
+            </a>
+            {{end}}
+        </div>
+        {{end}}
+
+        <!-- Assignment -->
+        {{if .Agent}}
+        <div class="section-title">Assignment</div>
+        <div class="agent-card" style="margin-bottom: var(--space-lg);">
+            <div class="noto-ring ring-{{.Agent.RingState}}">
+                <img class="agent-avatar-img" src="/static/emoji/agent.webp" alt="">
+            </div>
+            <div class="agent-name">{{.Agent.Name}}</div>
+            <div class="t-body-xs" style="color: var(--dim);">
+                Branch: <span class="t-data-value">{{.Agent.Branch}}</span>
+            </div>
+            <div class="t-body-xs" style="color: var(--muted);">
+                {{.Agent.WorktreePath}}
+            </div>
+        </div>
+        {{end}}
+
+        <!-- Result -->
+        {{if .Result}}
+        <div class="section-title">Result</div>
+        <div style="background: var(--surface-low); border-radius: var(--radius-sm); padding: var(--space-md); margin-bottom: var(--space-lg);">
+            <div class="t-body-sm" style="color: var(--dim);">{{.Result}}</div>
+        </div>
+        {{end}}
+
+        <!-- Log Stream -->
+        {{if .LogEntries}}
+        <div class="section-title">Log Stream</div>
+        <div style="max-height: 400px; overflow-y: auto; background: var(--surface-low); border-radius: var(--radius-sm); padding: var(--space-sm); margin-bottom: var(--space-lg); font-family: var(--font-data); font-size: 12px;">
+            {{range .LogEntries}}
+            <div style="padding: var(--space-xs) var(--space-sm); border-left: 3px solid {{if eq .Kind "tool_call"}}var(--blue){{else if eq .Kind "error"}}var(--red){{else if eq .Kind "result"}}transparent{{else}}transparent{{end}}; {{if eq .Kind "result"}}background: rgba(120, 220, 119, 0.08);{{end}} margin-bottom: 2px; border-radius: var(--radius-xs);">
+                <div style="display: flex; align-items: flex-start; gap: var(--space-sm);">
+                    <span style="color: var(--muted); flex-shrink: 0;">
+                        {{if eq .Kind "tool_call"}}&#x1F527;{{else if eq .Kind "error"}}&#x26A0;{{else if eq .Kind "result"}}&#x2705;{{else}}&#x1F4DD;{{end}}
+                    </span>
+                    <div style="flex: 1; min-width: 0;">
+                        <div class="log-entry-content {{if .Expandable}}log-collapsed{{end}}" onclick="this.classList.toggle('log-collapsed'); this.classList.toggle('log-expanded');">
+                            {{.Content}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{end}}
+        </div>
+        {{end}}
+
+        <!-- Failure Info (conditional) -->
+        {{if eq .Status "failed"}}
+        {{if .Failure}}
+        <div class="section-title">Failure Info</div>
+        <div style="background: rgba(255, 180, 171, 0.08); border-left: 3px solid var(--red); border-radius: var(--radius-sm); padding: var(--space-md); margin-bottom: var(--space-lg);">
+            <div style="display: flex; gap: var(--space-md); margin-bottom: var(--space-sm);">
+                <span class="meta-pill" style="color: var(--red);"><span class="label">Classification</span> {{.Failure.Classification}}</span>
+                <span class="meta-pill" style="color: var(--orange);"><span class="label">Retries</span> {{.Failure.RetryCount}}</span>
+            </div>
+            <div class="t-body-sm" style="color: var(--red);">{{.Failure.ErrorMessage}}</div>
+        </div>
+        {{end}}
+        {{end}}
+    </div>
+</div>
+{{end}}

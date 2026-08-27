@@ -1,0 +1,177 @@
+version: "1"
+
+metadata:
+  title: "Developer Psychology with AI Agents"
+  description: "6-chapter book exploring the psychological dimensions of working with AI coding agents"
+  constraints:
+    - "Each chapter 4000-6000 words"
+    - "Cite at least 3 peer-reviewed sources per chapter"
+    - "Max 3 files per task"
+
+phases:
+  - id: "research"
+    name: "Research"
+    description: "Gather source material, frameworks, and empirical findings for all chapters"
+    depends_on: []
+    gate:
+      test_cmd: "bash -c '[ $(ls research/*.md 2>/dev/null | wc -l) -ge 4 ]'"
+      acceptance:
+        - "At least 4 research documents produced"
+        - "Each document cites 3+ peer-reviewed sources"
+    tasks:
+      - title: "Cognitive load and AI pair programming research"
+        role: "researcher"
+        files:
+          - "research/cognitive-load.md"
+        description: "Survey literature on cognitive load theory applied to programming with AI assistants. Cover dual-process theory, attention splitting, and flow state disruption."
+        acceptance_criteria:
+          - "Document contains 5+ cited studies on cognitive load in programming"
+          - "Covers both benefits and risks of AI-assisted cognition"
+          - "Identifies 3+ open questions for the book to address"
+      - title: "Trust calibration and automation bias research"
+        role: "researcher"
+        files:
+          - "research/trust-calibration.md"
+        description: "Investigate trust dynamics between developers and AI agents. Cover automation bias, appropriate reliance, and trust repair after failures."
+        acceptance_criteria:
+          - "Document contains 5+ cited studies on human-AI trust"
+          - "Includes framework for trust calibration stages"
+          - "Maps trust patterns to developer experience levels"
+      - title: "Skill development and deskilling research"
+        role: "researcher"
+        files:
+          - "research/skill-development.md"
+        description: "Research how AI coding agents affect developer skill acquisition, maintenance, and potential deskilling. Cover deliberate practice theory and expertise development."
+        acceptance_criteria:
+          - "Document contains 5+ cited studies on skill development"
+          - "Covers both novice and expert developer impacts"
+          - "Proposes framework for maintaining skills while using AI"
+      - title: "Team dynamics and AI agents research"
+        role: "researcher"
+        files:
+          - "research/team-dynamics.md"
+        description: "Research how AI coding agents change team collaboration patterns, code review dynamics, and knowledge sharing."
+        acceptance_criteria:
+          - "Document contains 4+ cited studies on team dynamics"
+          - "Covers impact on code review practices"
+          - "Identifies changes to mentorship and onboarding"
+
+  - id: "specification"
+    name: "Specification"
+    description: "Create detailed chapter outlines with learning objectives and structural plans"
+    depends_on: ["research"]
+    gate:
+      test_cmd: "bash -c '[ $(ls specs/*.md 2>/dev/null | wc -l) -ge 2 ]'"
+      acceptance:
+        - "Book outline with all 6 chapters defined"
+        - "Each chapter has 3-5 learning objectives"
+    tasks:
+      - title: "Book outline and chapter plans"
+        role: "architect"
+        files:
+          - "specs/book-outline.md"
+          - "specs/chapter-plans.md"
+        description: "Design the full book structure: chapter sequence, narrative arc, key themes per chapter, and cross-chapter references. Each chapter plan includes learning objectives, section breakdown, and research dependencies."
+        acceptance_criteria:
+          - "6 chapters defined with titles and 200-word summaries"
+          - "Each chapter has 3-5 specific learning objectives"
+          - "Cross-references between chapters identified"
+          - "Research-to-chapter mapping complete"
+
+  - id: "content"
+    name: "Content Writing"
+    description: "Write all 6 chapters following the specification and research"
+    depends_on: ["specification"]
+    gate:
+      test_cmd: "bash -c '[ $(ls chapters/*.md 2>/dev/null | wc -l) -ge 6 ]'"
+      acceptance:
+        - "All 6 chapters written"
+        - "Each chapter is 4000-6000 words"
+    tasks:
+      - title: "Chapter 1: The cognitive revolution in coding"
+        role: "implementer"
+        files:
+          - "chapters/01-cognitive-revolution.md"
+        description: "Write chapter 1 covering how AI agents change the cognitive demands of programming. Draw from research/cognitive-load.md findings."
+        acceptance_criteria:
+          - "Chapter is 4000-6000 words"
+          - "Cites at least 3 peer-reviewed sources"
+          - "Opens with a compelling developer scenario"
+      - title: "Chapter 2: Trust and the machine"
+        role: "implementer"
+        files:
+          - "chapters/02-trust-and-machine.md"
+        description: "Write chapter 2 on trust calibration with AI coding agents. Draw from research/trust-calibration.md findings."
+        acceptance_criteria:
+          - "Chapter is 4000-6000 words"
+          - "Cites at least 3 peer-reviewed sources"
+          - "Includes practical trust calibration exercises"
+      - title: "Chapter 3: Skill in the age of AI"
+        role: "implementer"
+        files:
+          - "chapters/03-skill-age-of-ai.md"
+        description: "Write chapter 3 on developer skill development and potential deskilling. Draw from research/skill-development.md."
+        acceptance_criteria:
+          - "Chapter is 4000-6000 words"
+          - "Cites at least 3 peer-reviewed sources"
+          - "Proposes actionable skill maintenance strategies"
+      - title: "Chapter 4: Teams reimagined"
+        role: "implementer"
+        files:
+          - "chapters/04-teams-reimagined.md"
+        description: "Write chapter 4 on how AI agents reshape team dynamics, code review, and mentorship. Draw from research/team-dynamics.md."
+        acceptance_criteria:
+          - "Chapter is 4000-6000 words"
+          - "Cites at least 3 peer-reviewed sources"
+          - "Includes team assessment framework"
+      - title: "Chapter 5: The emotional landscape"
+        role: "implementer"
+        files:
+          - "chapters/05-emotional-landscape.md"
+        description: "Write chapter 5 on the emotional and motivational aspects of AI-assisted development: frustration, delight, imposter syndrome, and agency."
+        acceptance_criteria:
+          - "Chapter is 4000-6000 words"
+          - "Cites at least 3 peer-reviewed sources"
+          - "Addresses imposter syndrome in AI-augmented work"
+      - title: "Chapter 6: Flourishing with AI"
+        role: "implementer"
+        files:
+          - "chapters/06-flourishing-with-ai.md"
+        description: "Write chapter 6 synthesizing all themes into a framework for thriving as a developer working with AI agents."
+        acceptance_criteria:
+          - "Chapter is 4000-6000 words"
+          - "References findings from all previous chapters"
+          - "Ends with a forward-looking synthesis"
+
+  - id: "developmental-edit"
+    name: "Developmental Edit"
+    description: "Review all chapters for structural coherence, argument strength, and narrative flow"
+    depends_on: ["content"]
+    gate:
+      test_cmd: "bash -c '[ $(ls chapters/*.md 2>/dev/null | wc -l) -ge 6 ]'"
+      acceptance:
+        - "All chapters reviewed and revised"
+        - "Cross-chapter consistency verified"
+    tasks:
+      - title: "Structural and argument review (chapters 1-3)"
+        role: "editor"
+        files:
+          - "chapters/01-cognitive-revolution.md"
+          - "chapters/02-trust-and-machine.md"
+          - "chapters/03-skill-age-of-ai.md"
+        description: "Developmental edit of chapters 1-3: check argument structure, evidence usage, transitions between sections, and alignment with learning objectives from specs/chapter-plans.md."
+        acceptance_criteria:
+          - "Each chapter's argument follows a clear logical progression"
+          - "All cited claims have supporting evidence"
+          - "Section transitions are smooth and purposeful"
+      - title: "Structural and argument review (chapters 4-6)"
+        role: "editor"
+        files:
+          - "chapters/04-teams-reimagined.md"
+          - "chapters/05-emotional-landscape.md"
+          - "chapters/06-flourishing-with-ai.md"
+        description: "Developmental edit of chapters 4-6: check argument structure, evidence usage, transitions, and that chapter 6 synthesizes themes from all prior chapters."
+        acceptance_criteria:
+          - "Each chapter's argument follows a clear logical progression"
+          - "Chapter 6 references all major themes from chapters 1-5"
+          - "Section transitions are smooth and purposeful"

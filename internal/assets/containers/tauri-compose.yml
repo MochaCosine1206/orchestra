@@ -1,0 +1,45 @@
+# tauri-compose.yml — Dark Factory docker-compose template for Tauri 2 projects
+#
+# Usage:
+#   docker compose -f tauri-compose.yml up --build        # full gate run
+#   docker compose -f tauri-compose.yml run app make test # specific target
+#
+# Volume layout:
+#   ./:/app          — project source tree (read-write; Cargo.lock may be updated)
+#   ./artifacts:/artifacts — compiled binaries and test reports written here
+#
+# Artifacts directory must exist before running:
+#   mkdir -p artifacts
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: tauri.Dockerfile
+    # Mount the project root into /app so the container sees live source.
+    # The Cargo registry and npm cache are persisted in named volumes to
+    # avoid re-downloading dependencies on every run.
+    volumes:
+      - ./:/app
+      - ./artifacts:/artifacts
+      - cargo-registry:/usr/local/cargo/registry
+      - cargo-git:/usr/local/cargo/git
+      - npm-cache:/root/.npm
+    working_dir: /app
+    # Run the full quality gate by default.
+    # Override at the command line: docker compose run app make test
+    command: make gate
+    environment:
+      # Tauri build in CI mode — skips update checks and disables interactive prompts.
+      CI: "true"
+      # Tell cargo / rustc to use all available cores.
+      CARGO_BUILD_JOBS: "0"
+      # Suppress GTK warnings that fire even in headless builds.
+      GDK_BACKEND: "x11"
+      DISPLAY: ""
+    # No ports exposed — build/test container only.
+
+volumes:
+  cargo-registry:
+  cargo-git:
+  npm-cache:

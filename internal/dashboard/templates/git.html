@@ -1,0 +1,136 @@
+{{define "git-empty"}}
+{{template "head" .}}
+<div class="git-view page-content">
+  <h1 class="page-title">Git</h1>
+  <p class="t-body-sm" style="color: var(--dim); padding: var(--space-xl);">No active projects. Run <code>orchestra go</code> to start, then view git flow here.</p>
+</div>
+{{template "foot" .}}
+{{end}}
+
+{{define "git"}}
+{{template "head" .}}
+<div class="git-view page-content">
+  <h1 class="page-title">Git: {{.ConductorID}}</h1>
+
+  <!-- Staging Status Indicator -->
+  <div class="staging-indicator">
+    <span class="staging-label">Staging</span>
+    <span class="staging-dot {{if eq .MergeStatus "done"}}dot-ok{{else if eq .MergeStatus "staging"}}dot-warn{{else if eq .MergeStatus "merging"}}dot-info{{else}}dot-idle{{end}}"></span>
+    <span class="staging-text">{{if .MergeStatus}}{{.MergeStatus}}{{else}}idle{{end}}</span>
+    <span class="dim">{{.BaseBranch}} → {{.StagingBranch}}</span>
+  </div>
+
+  <!-- Branch Flow Diagram -->
+  <section class="git-flow">
+    <h2 class="section-title">Branch Flow</h2>
+
+    <!-- Base branch -->
+    <div class="branch-lane branch-base">
+      <div class="branch-header">
+        <span class="noto-ring" style="--ring-color: var(--accent)">B</span>
+        <span class="branch-name font-data">{{.BaseBranch}}</span>
+        <span class="status-badge badge-base">base</span>
+      </div>
+    </div>
+
+    <!-- Staging branch -->
+    <div class="branch-lane branch-staging">
+      <div class="branch-header">
+        <span class="noto-ring" style="--ring-color: var(--blue)">S</span>
+        <span class="branch-name font-data">{{.StagingBranch}}</span>
+        <span class="status-badge badge-{{if eq .MergeStatus "done"}}merged{{else if .MergeStatus}}merging{{else}}pending{{end}}">{{if .MergeStatus}}{{.MergeStatus}}{{else}}pending{{end}}</span>
+      </div>
+    </div>
+
+    <!-- Feature clusters -->
+    {{range .Clusters}}
+    <div class="cluster-group">
+      <div class="cluster-header">{{.Name}}</div>
+      {{range .Lanes}}
+      <div class="branch-lane branch-task {{if .HasConflict}}conflict-region{{end}}"
+           hx-get="/agent/{{.AssignedTo}}" hx-target="body" hx-push-url="true"
+           style="cursor:pointer">
+        <div class="branch-header">
+          <span class="noto-ring" style="--ring-color: var(--green)">{{slice .Role 0 1}}</span>
+          <span class="branch-name font-data" title="{{.Branch}}">{{.TaskID}}</span>
+          <span class="status-badge badge-{{.Status}}">{{.Status}}</span>
+          {{if .HasConflict}}
+          <span class="conflict-tier-badge tier-{{.ConflictTier}}">{{.ConflictTier}}</span>
+          {{end}}
+        </div>
+      </div>
+      {{end}}
+    </div>
+    {{end}}
+
+    <!-- Ungrouped task branches -->
+    {{range .UngroupedLanes}}
+    <div class="branch-lane branch-task {{if .HasConflict}}conflict-region{{end}}"
+         hx-get="/agent/{{.AssignedTo}}" hx-target="body" hx-push-url="true"
+         style="cursor:pointer">
+      <div class="branch-header">
+        <span class="noto-ring" style="--ring-color: var(--green)">{{slice .Role 0 1}}</span>
+        <span class="branch-name font-data" title="{{.Branch}}">{{.TaskID}}</span>
+        <span class="status-badge badge-{{.Status}}">{{.Status}}</span>
+        {{if .HasConflict}}
+        <span class="conflict-tier-badge tier-{{.ConflictTier}}">{{.ConflictTier}}</span>
+        {{end}}
+      </div>
+    </div>
+    {{end}}
+
+    {{if and (not .Clusters) (not .UngroupedLanes)}}
+    <p class="dim">No task branches yet.</p>
+    {{end}}
+  </section>
+
+  <!-- File Locks -->
+  <section class="file-lock-list">
+    <h2 class="section-title">File Locks</h2>
+    {{if .FileLocks}}
+    {{range .FileLocks}}
+    <div class="lock-row lock-{{.Status}}">
+      <span class="lock-file font-data">{{.FilePath}}</span>
+      <span class="lock-owner">{{.TaskID}}</span>
+      <span class="lock-agent dim">{{.LockedBy}}</span>
+      <span class="status-badge badge-{{.Status}}">{{.Status}}</span>
+    </div>
+    {{end}}
+    {{else}}
+    <p class="dim">No active file locks.</p>
+    {{end}}
+  </section>
+
+  <!-- Merge Queue Timeline -->
+  <section class="merge-queue">
+    <h2 class="section-title">Merge Queue</h2>
+    {{if .MergeQueue}}
+    {{range .MergeQueue}}
+    <div class="mq-entry mq-{{.Status}}"
+         hx-get="/task/{{.TaskID}}" hx-target="body" hx-push-url="true"
+         style="cursor:pointer">
+      <span class="mq-position font-data">#{{.Position}}</span>
+      <span class="mq-branch font-data">{{.Branch}}</span>
+      <span class="status-badge badge-{{.Status}}">{{.Status}}</span>
+      {{if .ConflictFiles}}
+      <span class="mq-conflicts dim" title="{{.ConflictFiles}}">conflicts</span>
+      {{end}}
+      {{if .ResolutionTier}}
+      <span class="conflict-tier-badge {{.TierClass}}">tier {{.ResolutionTier}}</span>
+      {{end}}
+      {{if gt .RefinementCount 0}}
+      <span class="mq-refinement dim">attempt {{.RefinementCount}}/{{.MaxRefinement}}</span>
+      {{end}}
+      {{if .TestResult}}
+      <span class="test-badge test-{{.TestResult}}">{{.TestResult}}</span>
+      {{end}}
+      <span class="conflict-type dim">syntactic</span>
+    </div>
+    {{end}}
+    {{else}}
+    <p class="dim">No merge queue entries.</p>
+    {{end}}
+  </section>
+</div>
+{{template "foot" .}}
+{{end}}

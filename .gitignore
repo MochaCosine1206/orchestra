@@ -1,0 +1,24 @@
+.DS_Store
+orchestrator.db
+orchestrator.db-shm
+orchestrator.db-wal
+logs/
+pids/
+specs/
+.worktree/
+# B-064: Prevent worktree bug from committing nested .claude/ duplicates
+.claude/.claude/
+# Note: .claude/settings.json and .claude/settings.local.json are version-controlled.
+# No secrets in them (Telegram tokens live in ~/.telegram-notify).
+# Paths use $CLAUDE_PROJECT_DIR (portable).
+# Go build output
+orchestra
+bin/
+dist/
+# Orchestra scaffolding (user projects)
+.orchestra/
+.orchestra-hooks/
+# Frontend
+node_modules/
+# Rust build output
+src-tauri/target/

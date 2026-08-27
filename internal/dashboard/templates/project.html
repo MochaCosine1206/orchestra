@@ -1,0 +1,7 @@
+{{define "project"}}
+{{template "head" .}}
+<div class="pad" hx-get="/api/project/{{.ID}}" hx-trigger="every 2s" hx-target="this" hx-swap="innerHTML">
+  {{template "project-fragment" .}}
+</div>
+{{template "foot" .}}
+{{end}}

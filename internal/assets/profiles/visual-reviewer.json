@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Bash(go build *)",
+      "Bash(go run *)",
+      "Bash(git *)",
+      "Bash(ls *)",
+      "Bash(mkdir *)",
+      "Bash(cat *)",
+      "Bash(kill *)",
+      "Bash(curl *)",
+      "Bash(sleep *)",
+      "Bash(echo *)",
+      "Bash(npx *)",
+      "Bash(lsof *)",
+      "mcp__playwright__*"
+    ],
+    "deny": [
+      "Edit",
+      "Write",
+      "WebSearch",
+      "WebFetch",
+      "Bash(sudo *)",
+      "Bash(rm -rf /*)"
+    ]
+  }
+}

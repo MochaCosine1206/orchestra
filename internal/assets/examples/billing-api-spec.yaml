@@ -1,0 +1,123 @@
+version: "1"
+
+metadata:
+  title: "Billing API"
+  description: "REST API for customer billing with invoice generation"
+  tech_stack:
+    language: "go"
+    framework: "net/http"
+    database: "sqlite"
+    testing: "go test"
+  constraints:
+    - "No external dependencies beyond stdlib and go-sqlite3"
+    - "All handlers must return JSON"
+
+phases:
+  - id: "foundation"
+    name: "Foundation"
+    description: "Project scaffolding, database schema, and core types"
+    depends_on: []
+    gate:
+      test_cmd: "go build ./..."
+      acceptance:
+        - "Project compiles successfully"
+        - "Database schema initializes without error"
+    tasks:
+      - title: "Project scaffolding"
+        role: "implementer"
+        files:
+          - "go.mod"
+          - "cmd/billing-api/main.go"
+          - "Makefile"
+        description: "Initialize Go module, create entry point with graceful shutdown, add Makefile with build/test/run targets"
+        acceptance_criteria:
+          - "go.mod exists with correct module path"
+          - "make build produces binary"
+          - "make run starts server on :8080"
+      - title: "Database schema and migrations"
+        role: "implementer"
+        files:
+          - "internal/db/schema.sql"
+          - "internal/db/db.go"
+        description: "Create SQLite schema for customers and invoices tables with WAL mode initialization"
+        acceptance_criteria:
+          - "Schema creates customers and invoices tables"
+          - "db.Open() initializes schema and enables WAL mode"
+      - title: "Core domain types"
+        role: "implementer"
+        files:
+          - "internal/models/customer.go"
+          - "internal/models/invoice.go"
+        description: "Define Customer and Invoice structs with JSON tags"
+        acceptance_criteria:
+          - "Customer has ID, Name, Email, CreatedAt fields"
+          - "Invoice has ID, CustomerID, Amount, Status, CreatedAt fields"
+
+  - id: "api"
+    name: "API Layer"
+    description: "HTTP handlers and routing for customer and invoice endpoints"
+    depends_on: ["foundation"]
+    gate:
+      test_cmd: "go test ./..."
+      acceptance:
+        - "All endpoint tests pass"
+        - "Invalid requests return appropriate error codes"
+    tasks:
+      - title: "Customer CRUD endpoints"
+        role: "implementer"
+        files:
+          - "internal/handlers/customer.go"
+          - "internal/handlers/customer_test.go"
+        description: "Implement GET/POST/PUT/DELETE handlers for customer resource"
+        acceptance_criteria:
+          - "GET /customers returns 200 with customer list"
+          - "POST /customers creates customer and returns 201"
+          - "GET /customers/{id} returns single customer"
+          - "DELETE /customers/{id} returns 204"
+      - title: "Invoice endpoints"
+        role: "implementer"
+        files:
+          - "internal/handlers/invoice.go"
+          - "internal/handlers/invoice_test.go"
+        description: "Implement invoice creation and listing endpoints"
+        acceptance_criteria:
+          - "POST /invoices creates invoice linked to customer"
+          - "GET /invoices?customer_id=X filters by customer"
+      - title: "Router setup"
+        role: "implementer"
+        files:
+          - "internal/handlers/router.go"
+        description: "Wire all handlers into net/http ServeMux with middleware"
+        acceptance_criteria:
+          - "All routes registered in NewRouter()"
+          - "Request logging middleware applied"
+
+  - id: "billing-logic"
+    name: "Billing Logic"
+    description: "Invoice generation, status transitions, and PDF export"
+    depends_on: ["api"]
+    gate:
+      test_cmd: "go test ./... -count=1"
+      acceptance:
+        - "Invoice state machine tests pass"
+        - "PDF generation produces valid output"
+    tasks:
+      - title: "Invoice state machine"
+        role: "implementer"
+        files:
+          - "internal/billing/state.go"
+          - "internal/billing/state_test.go"
+        description: "Implement draft->sent->paid->void state transitions with validation"
+        acceptance_criteria:
+          - "Valid transitions succeed (draft->sent, sent->paid)"
+          - "Invalid transitions return error (paid->draft)"
+          - "Void is terminal state"
+      - title: "PDF invoice generation"
+        role: "implementer"
+        files:
+          - "internal/billing/pdf.go"
+          - "internal/billing/pdf_test.go"
+        description: "Generate PDF invoices from invoice data using stdlib"
+        acceptance_criteria:
+          - "GeneratePDF returns valid PDF bytes"
+          - "PDF contains customer name and line items"

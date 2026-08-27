@@ -1,0 +1,173 @@
+{{define "artifacts-base"}}<!DOCTYPE html>
+<html lang="en" data-theme="clean">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Orchestra — Artifacts</title>
+    <style>
+        @font-face { font-family: 'Manrope'; src: url('/static/fonts/manrope-variable.woff2') format('woff2'); font-weight: 200 800; font-display: swap; }
+        @font-face { font-family: 'Inter'; src: url('/static/fonts/inter-variable.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+        @font-face { font-family: 'Space Grotesk'; src: url('/static/fonts/space-grotesk-variable.woff2') format('woff2'); font-weight: 300 700; font-display: swap; }
+    </style>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/htmx.min.js"></script>
+</head>
+<body>
+    <nav class="top-nav">
+        <a href="/" class="nav-brand">
+            <span class="nav-logo"></span>
+            Orchestra
+        </a>
+        <div class="nav-tabs">
+            <a href="/" class="nav-tab">Factory</a>
+            <a href="/briefing" class="nav-tab">Briefing</a>
+            <a href="/config" class="nav-tab">Configuration</a>
+            <a href="/artifacts" class="nav-tab active">Artifacts</a>
+        </div>
+        <div class="nav-right">
+            <button class="nav-search">
+                <span>Search...</span>
+                <kbd>Cmd+K</kbd>
+            </button>
+        </div>
+    </nav>
+
+    <main id="main-content">
+        {{template "artifacts-content" .}}
+    </main>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>{{end}}
+
+{{define "artifacts-content"}}
+<div class="artifacts-page">
+    <h1 class="page-title">Artifacts</h1>
+
+    {{/* Filter Bar */}}
+    <div class="artifact-filters">
+        <div class="config-field">
+            <select class="config-select" id="artifact-session" name="session"
+                    hx-get="/artifacts"
+                    hx-target="#artifact-list"
+                    hx-swap="innerHTML"
+                    hx-include="#artifact-session, #artifact-project">
+                <option value="">All Sessions</option>
+                {{range .Sessions}}
+                <option value="{{.ID}}" {{if eq $.SelectedSession .ID}}selected{{end}}>{{.ID}}</option>
+                {{end}}
+            </select>
+        </div>
+
+        <div class="artifact-type-pills">
+            <button type="button" class="type-pill {{if eq .SelectedType ""}}active{{end}}"
+                    hx-get="/artifacts?type="
+                    hx-target="#artifact-list"
+                    hx-swap="innerHTML">All</button>
+            <button type="button" class="type-pill {{if eq .SelectedType "diff"}}active{{end}}"
+                    hx-get="/artifacts?type=diff"
+                    hx-target="#artifact-list"
+                    hx-swap="innerHTML">Diffs</button>
+            <button type="button" class="type-pill {{if eq .SelectedType "report"}}active{{end}}"
+                    hx-get="/artifacts?type=report"
+                    hx-target="#artifact-list"
+                    hx-swap="innerHTML">Reports</button>
+            <button type="button" class="type-pill {{if eq .SelectedType "log"}}active{{end}}"
+                    hx-get="/artifacts?type=log"
+                    hx-target="#artifact-list"
+                    hx-swap="innerHTML">Logs</button>
+            <button type="button" class="type-pill {{if eq .SelectedType "result"}}active{{end}}"
+                    hx-get="/artifacts?type=result"
+                    hx-target="#artifact-list"
+                    hx-swap="innerHTML">Results</button>
+        </div>
+
+        <div class="config-field">
+            <select class="config-select" id="artifact-project" name="project"
+                    hx-get="/artifacts"
+                    hx-target="#artifact-list"
+                    hx-swap="innerHTML"
+                    hx-include="#artifact-session, #artifact-project">
+                <option value="">All Projects</option>
+                {{range .Projects}}
+                <option value="{{.}}" {{if eq $.SelectedProject .}}selected{{end}}>{{.}}</option>
+                {{end}}
+            </select>
+        </div>
+    </div>
+
+    {{/* Artifact List */}}
+    <div class="artifact-list" id="artifact-list">
+        {{if .Artifacts}}
+        {{range .Artifacts}}
+        <div class="artifact-row">
+            <div class="artifact-row-header"
+                 hx-get="/artifacts/{{.ID}}/preview"
+                 hx-target="#preview-{{.ID}}"
+                 hx-swap="innerHTML"
+                 hx-trigger="click"
+                 onclick="this.closest('.artifact-row').classList.toggle('expanded')">
+                <span class="artifact-type-icon artifact-type-{{.Type}}">
+                    {{if eq .Type "diff"}}&#x1F4DD;{{end}}
+                    {{if eq .Type "report"}}&#x1F4CA;{{end}}
+                    {{if eq .Type "log"}}&#x1F4C4;{{end}}
+                    {{if eq .Type "result"}}&#x2705;{{end}}
+                </span>
+                <div class="artifact-info">
+                    <div class="artifact-title">{{.Title}}</div>
+                    <div class="artifact-context">
+                        <span class="t-data-label">{{.SessionID}}</span>
+                        {{if .TaskID}}<span class="artifact-task-id">{{.TaskID}}</span>{{end}}
+                    </div>
+                </div>
+                <div class="artifact-timestamp">{{formatTime .CreatedAt}}</div>
+                <span class="artifact-expand-icon">&#x25B6;</span>
+            </div>
+            <div class="artifact-preview" id="preview-{{.ID}}">
+                {{/* Lazy-loaded via HTMX */}}
+            </div>
+        </div>
+        {{end}}
+        {{else}}
+        <div class="empty-state">No artifacts found. Artifacts are generated during orchestration sessions.</div>
+        {{end}}
+    </div>
+</div>
+{{end}}
+
+{{define "artifact-preview-diff"}}
+<div class="diff-view">
+    {{range .Lines}}
+    <div class="diff-line {{if eq .Type "add"}}diff-add{{end}}{{if eq .Type "del"}}diff-del{{end}}{{if eq .Type "header"}}diff-header{{end}}">
+        <span class="diff-line-num">{{.Num}}</span>
+        <span class="diff-line-content">{{.Content}}</span>
+    </div>
+    {{end}}
+</div>
+{{end}}
+
+{{define "artifact-preview-report"}}
+<div class="artifact-report">
+    {{.RenderedHTML}}
+</div>
+{{end}}
+
+{{define "artifact-preview-log"}}
+<div class="log-stream">
+    {{range .Entries}}
+    <div class="log-entry log-{{.Level}}">
+        <span class="log-time">{{.Timestamp}}</span>
+        <span class="log-level">{{.Level}}</span>
+        <span class="log-message">{{.Message}}</span>
+    </div>
+    {{end}}
+</div>
+{{end}}
+
+{{define "artifact-preview-result"}}
+<div class="artifact-result">
+    <pre class="result-text">{{.Content}}</pre>
+</div>
+{{end}}

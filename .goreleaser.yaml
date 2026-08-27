@@ -1,0 +1,84 @@
+# GoReleaser config for Claude Orchestra
+# Triggered by GitHub Action on tag push (vX.Y.Z)
+# Produces: Homebrew formula, Docker image, go install binary, GitHub release
+# Validated by: orchestra release --dry-run (gate 5)
+
+version: 2
+
+project_name: orchestra
+
+snapshot:
+  name_template: "{{ .Version }}-snapshot"
+
+before:
+  hooks:
+    - go mod tidy
+    - go test ./...
+
+builds:
+  - id: orchestra
+    main: ./cmd/orchestra/
+    binary: orchestra
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X github.com/MochaCosine1206/orchestra/internal/version.Version={{.Version}}
+      - -X github.com/MochaCosine1206/orchestra/internal/version.Commit={{.Commit}}
+      - -X github.com/MochaCosine1206/orchestra/internal/version.Date={{.Date}}
+
+archives:
+  - id: default
+    format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    # Note: add format_overrides for windows/zip if windows is added to goos
+
+checksum:
+  name_template: "checksums.txt"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+
+brews:
+  - name: orchestra
+    repository:
+      owner: Plyne-Technologies
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
+    directory: Formula
+    homepage: "https://github.com/Plyne-Technologies/Claude-Orchestra"
+    description: "Multi-agent code orchestration — coordinate parallel Claude Code agents"
+    license: "MIT"
+    install: |
+      bin.install "orchestra"
+    test: |
+      system "#{bin}/orchestra", "version"
+
+dockers:
+  - image_templates:
+      - "ghcr.io/plyne-technologies/orchestra:{{ .Version }}"
+      - "ghcr.io/plyne-technologies/orchestra:latest"
+    dockerfile: Dockerfile.release
+    build_flag_templates:
+      - "--label=org.opencontainers.image.title={{ .ProjectName }}"
+      - "--label=org.opencontainers.image.version={{ .Version }}"
+      - "--label=org.opencontainers.image.source=https://github.com/Plyne-Technologies/Claude-Orchestra"
+
+release:
+  github:
+    owner: Plyne-Technologies
+    name: Claude-Orchestra
+  draft: false
+  prerelease: auto
+  name_template: "Orchestra {{ .Version }}"

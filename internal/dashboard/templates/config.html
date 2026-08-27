@@ -1,0 +1,81 @@
+{{define "config"}}
+{{template "head" .}}
+<div class="page-content">
+  <h1 class="page-title">Configuration</h1>
+
+  {{range .Sections}}
+  <section class="config-section" id="config-{{.ID}}">
+    <h2 class="config-section-title">{{.Title}}</h2>
+
+    {{if eq .ID "appearance"}}
+    <div class="theme-grid">
+      {{range $.ThemeSwatches}}
+      <button class="theme-swatch"
+              data-theme-name="{{.Name}}"
+              style="background:{{.BG}};color:{{.FG}}"
+              onclick="setTheme('{{.Name}}')"
+              title="{{.Label}}">
+        <span class="swatch-fill" style="background:{{.BG}}"></span>
+        <span class="theme-swatch-label">{{.Label}}</span>
+      </button>
+      {{end}}
+    </div>
+    {{else}}
+
+    {{$sectionID := .ID}}
+    {{if .Settings}}
+    <div class="config-fields">
+      {{range .Settings}}
+      <div class="config-field">
+        <label class="config-label">{{.Label}}</label>
+        <div class="config-control">
+          {{if eq .Type "checkbox"}}
+          <input type="checkbox" class="config-input" data-key="{{.Key}}" data-section="{{$sectionID}}" {{if eq .Value "true"}}checked{{end}}>
+          {{else if eq .Type "select"}}
+          <select class="config-select" data-key="{{.Key}}" data-section="{{$sectionID}}">
+            {{$val := .Value}}
+            {{range .Options}}
+            <option value="{{.}}" {{if eq . $val}}selected{{end}}>{{.}}</option>
+            {{end}}
+          </select>
+          {{else if eq .Type "number"}}
+          <input type="number" class="config-input" data-key="{{.Key}}" data-section="{{$sectionID}}" value="{{.Value}}">
+          {{else}}
+          <input type="text" class="config-input" data-key="{{.Key}}" data-section="{{$sectionID}}" value="{{.Value}}" placeholder="{{.Placeholder}}">
+          {{end}}
+        </div>
+        {{if .Tooltip}}<span class="config-tooltip">{{.Tooltip}}</span>{{end}}
+      </div>
+      {{end}}
+    </div>
+    {{end}}
+    {{end}}
+  </section>
+  {{end}}
+
+  <section class="config-section" id="config-sandbox">
+    <h2 class="config-section-title">Sandbox Status</h2>
+    <div class="config-sandbox-panel">
+      <p class="config-sandbox-env">{{.SandboxEnv}}</p>
+      <p class="config-sandbox-note">{{.SandboxNote}}</p>
+    </div>
+  </section>
+</div>
+
+<script>
+function setTheme(name) {
+  document.documentElement.setAttribute('data-theme', name);
+  localStorage.setItem('orchestra-theme', name);
+  fetch('/api/config/theme', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({theme: name})
+  });
+}
+(function() {
+  var saved = localStorage.getItem('orchestra-theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+})();
+</script>
+{{template "foot" .}}
+{{end}}

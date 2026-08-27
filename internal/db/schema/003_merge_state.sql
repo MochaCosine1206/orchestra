@@ -1,0 +1,6 @@
+-- Migration 003: Merge state tracking for crash recovery (B-145)
+-- Adds columns to conductors table to track merge progress so the monitor
+-- can resume after a mid-merge conductor crash.
+--
+-- ALTER TABLE ADD COLUMN is not idempotent in SQLite — the migration
+-- function guards against duplicate columns.

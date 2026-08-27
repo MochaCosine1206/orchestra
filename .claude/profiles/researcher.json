@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Edit",
+      "Write",
+      "WebSearch",
+      "WebFetch",
+      "Bash(git *)"
+    ],
+    "deny": [
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(~/.ssh/**)",
+      "Bash(sudo *)",
+      "Bash(rm -rf /*)",
+      "Bash(git push *)",
+      "Bash(git tag *)",
+      "Bash(git tag)",
+      "Bash(curl *)",
+      "Bash(wget *)"
+    ]
+  }
+}

@@ -1,0 +1,70 @@
+{{define "artifacts"}}
+{{template "head" .}}
+<div class="page-content">
+  <h1 class="page-title">Artifacts</h1>
+
+  {{block "artifact-filters" .}}
+  <div class="artifact-filters">
+    <select class="config-select" id="artifact-filter-type" onchange="applyArtifactFilters()">
+      <option value="">All Types</option>
+      {{range .AllTypes}}
+      <option value="{{.}}" {{if eq . $.FilterType}}selected{{end}}>{{.}}</option>
+      {{end}}
+    </select>
+    <select class="config-select" id="artifact-filter-session" onchange="applyArtifactFilters()">
+      <option value="">All Sessions</option>
+      {{range .AllSessionIDs}}
+      <option value="{{.}}" {{if eq . $.FilterSession}}selected{{end}}>{{.}}</option>
+      {{end}}
+    </select>
+  </div>
+  {{end}}
+
+  <div class="artifact-list" id="artifact-list">
+    {{if not .HasArtifacts}}
+    <div class="artifact-empty">
+      <p>No artifacts yet. Artifacts appear after orchestration runs complete.</p>
+    </div>
+    {{else}}
+    {{range .Sessions}}
+    <div class="artifact-session">
+      <h2 class="artifact-session-title">{{.SessionID}}</h2>
+      {{/* Goal text removed — use artifact list instead */}}
+      {{range .Artifacts}}
+      <div class="artifact-row" data-type="{{.Type}}">
+        <div class="artifact-row-header">
+          <span class="artifact-type-icon">{{if eq (printf "%s" .Type) "diff"}}🔀{{else if eq (printf "%s" .Type) "review"}}📋{{else if eq (printf "%s" .Type) "log"}}📄{{else if eq (printf "%s" .Type) "markdown"}}📄{{else if eq (printf "%s" .Type) "result"}}✅{{else if eq (printf "%s" .Type) "reconcile"}}📝{{else}}📦{{end}}</span>
+          <div class="artifact-info">
+            <span class="artifact-title">{{.Title}}</span>
+            <div class="artifact-context">Session: {{.SessionID}}</div>
+          </div>
+          <span class="status-badge badge-{{.Type}}">{{.Type}}</span>
+          <div class="artifact-timestamp">{{.ID}}</div>
+        </div>
+        <div class="artifact-preview">
+          {{safeHTML .PreviewHTML}}
+        </div>
+      </div>
+      {{end}}
+    </div>
+    {{end}}
+    {{end}}
+  </div>
+
+  <div class="config-sandbox-panel">
+    <p class="config-sandbox-note">{{.PluginNote}}</p>
+  </div>
+</div>
+
+<script>
+function applyArtifactFilters() {
+  var type_ = document.getElementById('artifact-filter-type').value;
+  var session = document.getElementById('artifact-filter-session').value;
+  var params = new URLSearchParams();
+  if (type_) params.set('type', type_);
+  if (session) params.set('session', session);
+  window.location.search = params.toString();
+}
+</script>
+{{template "foot" .}}
+{{end}}

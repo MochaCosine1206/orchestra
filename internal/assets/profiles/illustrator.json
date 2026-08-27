@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Write",
+      "Glob",
+      "Grep",
+      "Bash(python3 *)",
+      "Bash(pip *)",
+      "Bash(pip3 *)",
+      "Bash(d2 *)",
+      "Bash(dot *)",
+      "Bash(mmdr *)",
+      "Bash(git *)",
+      "Bash(ls *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(echo *)",
+      "Bash(cat *)",
+      "Bash(test *)",
+      "Bash(true)",
+      "Bash(false)"
+    ],
+    "deny": [
+      "Edit",
+      "WebSearch",
+      "WebFetch",
+      "Bash(sudo *)",
+      "Bash(rm -rf /*)",
+      "Bash(git push *)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(~/.ssh/**)"
+    ]
+  }
+}
